@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate · VynixFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard-shared.css" />
+  <style>
+    .gen-layout { display: grid; grid-template-columns: 380px 1fr; gap: 18px; align-items: flex-start; }
+
+    /* LEFT: CONTROLS */
+    .gen-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; position: sticky; top: 80px; }
+    .gen-section { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+    .gen-section:last-child { border-bottom: none; }
+    .gen-section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .gen-section-label .hint { color: var(--neon-dark); font-weight: 600; letter-spacing: 0; text-transform: none; font-size: 11px; }
+
+    /* Model picker */
+    .model-picker { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+    .model-picker::-webkit-scrollbar { display: none; }
+    .model-pick { flex-shrink: 0; width: 64px; text-align: center; cursor: pointer; }
+    .model-pick-img { width: 56px; height: 56px; border-radius: 12px; background: linear-gradient(135deg, var(--neon-mid), var(--neon-pale)); border: 2px solid transparent; display: grid; place-items: center; font-weight: 700; color: var(--neon-dark); font-size: 15px; margin: 0 auto 4px; transition: border-color var(--t); }
+    .model-pick.active .model-pick-img { border-color: var(--neon-dark); box-shadow: 0 0 0 2px var(--neon-pale); }
+    .model-pick-name { font-size: 11px; font-weight: 600; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .model-pick.active .model-pick-name { color: var(--text); font-weight: 700; }
+    .model-pick-add .model-pick-img { background: var(--surface); border: 1px dashed var(--border-strong); color: var(--text-3); font-size: 20px; font-weight: 400; }
+
+    /* Scene tabs */
+    .scene-tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 2px; scrollbar-width: none; }
+    .scene-tabs::-webkit-scrollbar { display: none; }
+    .scene-tab { flex-shrink: 0; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text-2); cursor: pointer; white-space: nowrap; transition: all var(--t); }
+    .scene-tab.active { background: var(--text); border-color: var(--text); color: #fff; }
+    .scene-tab.warm.active { background: var(--accent-warm); border-color: var(--accent-warm); }
+
+    /* Preset grid */
+    .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .preset { aspect-ratio: 1; border-radius: 10px; background: var(--surface-2); border: 2px solid transparent; cursor: pointer; position: relative; overflow: hidden; transition: border-color var(--t); display: grid; place-items: end; padding: 6px; }
+    .preset:hover { border-color: var(--border-strong); }
+    .preset.active { border-color: var(--neon-dark); }
+    .preset-label { background: rgba(13,15,20,0.75); color: #fff; font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px; backdrop-filter: blur(6px); }
+    .preset-placeholder { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10px; color: var(--text-3); font-weight: 600; padding: 4px; text-align: center; }
+
+    /* Controls row */
+    .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .control-item label { display: block; font-size: 11px; font-weight: 700; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
+    .seg { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+    .seg button { flex: 1; padding: 6px 8px; border: none; background: transparent; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all var(--t); }
+    .seg button.active { background: var(--bg); color: var(--text); box-shadow: var(--shadow-sm); }
+
+    /* Generate button */
+    .gen-cta { padding: 18px 20px; background: var(--surface); }
+    .gen-btn { width: 100%; height: 48px; background: var(--neon-dark); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all var(--t); font-family: inherit; }
+    .gen-btn:hover { background: #28581d; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(58,125,42,0.3); }
+    .gen-btn .cost { background: rgba(255,255,255,0.18); padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .gen-hint { text-align: center; font-size: 11.5px; color: var(--text-3); margin-top: 8px; }
+
+    /* RIGHT: RESULTS */
+    .results-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; min-height: 600px; }
+    .results-head { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .results-head-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+    .results-head-sub { font-size: 12.5px; color: var(--text-3); margin-top: 1px; }
+    .results-body { padding: 18px 22px; }
+    .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+    /* In-progress card */
+    .progress-card { background: var(--neon-pale); border: 1px solid var(--neon-border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+    .progress-spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--neon-mid); border-top-color: var(--neon-dark); animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .progress-info { flex: 1; }
+    .progress-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .progress-meta { font-size: 12px; color: var(--neon-dark); margin-top: 2px; }
+    .progress-bar { margin-top: 8px; height: 4px; background: var(--bg); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--neon-dark); border-radius: 2px; width: 62%; animation: breathe 2s ease-in-out infinite; }
+    @keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    /* Result tile */
+    .result-tile { aspect-ratio: 3/4; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); position: relative; overflow: hidden; cursor: pointer; transition: transform var(--t); }
+    .result-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .result-tile:hover .result-actions { opacity: 1; }
+    .result-placeholder { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; color: var(--text-3); font-weight: 600; text-align: center; padding: 8px; }
+    .result-tile.new::after { content: "NEW"; position: absolute; top: 8px; left: 8px; background: var(--neon-dark); color: #fff; font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em; padding: 3px 7px; border-radius: 4px; }
+    .result-actions { position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity var(--t); }
+    .result-action { flex: 1; background: rgba(13,15,20,0.85); color: #fff; font-size: 10px; font-weight: 600; padding: 5px; border-radius: 5px; border: none; cursor: pointer; backdrop-filter: blur(6px); }
+    .result-action:hover { background: var(--text); }
+
+    .results-empty { text-align: center; padding: 60px 20px; color: var(--text-3); }
+    .results-empty-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); display: grid; place-items: center; margin: 0 auto 14px; font-size: 22px; }
+    .results-empty-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+
+    @media (max-width: 1100px) {
+      .gen-layout { grid-template-columns: 340px 1fr; }
+      .results-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .gen-layout { grid-template-columns: 1fr; }
+      .gen-panel { position: static; }
+      .results-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .preset-grid { grid-template-columns: repeat(3, 1fr); }
+      .results-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-icon">V</span>
+        VynixFlow
+      </div>
+      <div class="sidebar-section-label">Workspace</div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html"><span class="sidebar-icon">⌂</span>Dashboard</a></li>
+        <li><a href="generate.html" class="active"><span class="sidebar-icon">✨</span>Generate</a></li>
+        <li><a href="models.html"><span class="sidebar-icon">◉</span>My Models</a></li>
+        <li><a href="gallery.html"><span class="sidebar-icon">▦</span>Gallery</a></li>
+        <li><a href="video.html"><span class="sidebar-icon">▶</span>Video Studio</a></li>
+      </ul>
+      <div class="sidebar-section-label" style="margin-top: 14px;">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="billing.html"><span class="sidebar-icon">◈</span>Credits & Billing</a></li>
+      </ul>
+      <div class="sidebar-credits">
+        <div class="sidebar-credits-row">
+          <span class="sidebar-credits-label">Credits</span>
+          <span class="sidebar-credits-num">237<span class="total"> / 300</span></span>
+        </div>
+        <div class="sidebar-credits-bar"><div class="sidebar-credits-fill" style="width: 79%;"></div></div>
+        <a href="billing.html" class="sidebar-credits-btn">Top up →</a>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">JM</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Jessica Miller</div>
+          <div class="sidebar-user-plan">Pro plan</div>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-mobile-menu" id="menuBtn" aria-label="Open menu"><span></span></button>
+          <div class="topbar-crumbs"><a href="dashboard.html">Dashboard</a><span class="sep">/</span><span style="color: var(--text);">Generate</span></div>
+        </div>
+        <div class="topbar-actions">
+          <a class="btn btn-ghost" href="gallery.html">View Gallery →</a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div class="page-head-text">
+            <h1>Generate</h1>
+            <p>Pick a model, choose a scene or write a prompt, batch a full week in one go.</p>
+          </div>
+        </div>
+
+        <div class="gen-layout">
+          <!-- LEFT PANEL -->
+          <div class="gen-panel">
+
+            <!-- MODEL -->
+            <div class="gen-section">
+              <div class="gen-section-label">Model <a href="model-builder.html" class="hint">+ New</a></div>
+              <div class="model-picker">
+                <div class="model-pick active"><div class="model-pick-img">A</div><div class="model-pick-name">Aria</div></div>
+                <div class="model-pick"><div class="model-pick-img">S</div><div class="model-pick-name">Sienna</div></div>
+                <div class="model-pick"><div class="model-pick-img">N</div><div class="model-pick-name">Nova</div></div>
+                <a href="model-builder.html" class="model-pick model-pick-add"><div class="model-pick-img">+</div><div class="model-pick-name">New</div></a>
+              </div>
+            </div>
+
+            <!-- SCENE CATEGORY -->
+            <div class="gen-section">
+              <div class="gen-section-label">Scene Category</div>
+              <div class="scene-tabs">
+                <div class="scene-tab active">All</div>
+                <div class="scene-tab">Lifestyle</div>
+                <div class="scene-tab">Fashion</div>
+                <div class="scene-tab">Fitness</div>
+                <div class="scene-tab warm">Swim</div>
+                <div class="scene-tab warm">Lingerie</div>
+                <div class="scene-tab warm">Cosplay</div>
+                <div class="scene-tab">Travel</div>
+              </div>
+              <div class="preset-grid">
+                <div class="preset active">
+                  <div class="preset-placeholder">[Beach]</div>
+                  <span class="preset-label">Beach Day</span>
+                </div>
+                <div class="preset">
+                  <div class="preset-placeholder">[Café]</div>
+                  <span class="preset-label">Coffee Date</span>
+                </div>
+                <div class="preset">
+                  <div class="preset-placeholder">[Gym]</div>
+                  <span class="preset-label">Gym Set</span>
+                </div>
+                <div class="preset">
+                  <div class="preset-placeholder">[Selfie]</div>
+                  <span class="preset-label">IG Selfie</span>
+                </div>
+                <div class="preset">
+                  <div class="preset-placeholder">[Night]</div>
+                  <span class="preset-label">Night Out</span>
+                </div>
+                <div class="preset">
+                  <div class="preset-placeholder">[Editorial]</div>
+                  <span class="preset-label">Editorial</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROMPT -->
+            <div class="gen-section">
+              <div class="gen-section-label">Or Describe It Yourself <span class="hint">optional</span></div>
+              <textarea class="input" placeholder="e.g. Sitting on a rooftop at golden hour, linen dress, wine glass, city skyline behind">Sitting on a rooftop at golden hour, linen dress, wine glass, city skyline behind</textarea>
+            </div>
+
+            <!-- OUTPUT CONTROLS -->
+            <div class="gen-section">
+              <div class="gen-section-label">Output</div>
+              <div class="control-row" style="margin-bottom: 12px;">
+                <div class="control-item">
+                  <label>Aspect Ratio</label>
+                  <div class="seg">
+                    <button>9:16</button>
+                    <button class="active">1:1</button>
+                    <button>4:5</button>
+                    <button>16:9</button>
+                  </div>
+                </div>
+                <div class="control-item">
+                  <label>Quality</label>
+                  <div class="seg">
+                    <button>Standard</button>
+                    <button class="active">4K</button>
+                  </div>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>Quantity</label>
+                <div class="seg">
+                  <button>1</button>
+                  <button class="active">4</button>
+                  <button>10</button>
+                  <button>25</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- GENERATE -->
+            <div class="gen-cta">
+              <button class="gen-btn">
+                Generate ✨
+                <span class="cost">10 credits</span>
+              </button>
+              <div class="gen-hint">4 photos · ~30 seconds · Aria · 4K · 1:1</div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT PANEL -->
+          <div class="results-panel">
+            <div class="results-head">
+              <div>
+                <div class="results-head-title">Results</div>
+                <div class="results-head-sub">This session · 12 photos generated</div>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn btn-ghost">Download all</button>
+                <button class="btn btn-outline">Save to Gallery →</button>
+              </div>
+            </div>
+
+            <div class="results-body">
+              <!-- In progress -->
+              <div class="progress-card">
+                <div class="progress-spinner"></div>
+                <div class="progress-info">
+                  <div class="progress-title">Generating 4 photos · Aria · Beach Day</div>
+                  <div class="progress-meta">2 of 4 complete · ~15 seconds remaining</div>
+                  <div class="progress-bar"><div class="progress-fill"></div></div>
+                </div>
+              </div>
+
+              <!-- Results grid -->
+              <div class="results-grid">
+                <div class="result-tile new">
+                  <div class="result-placeholder">[Aria · Beach 01]<br/><span style="opacity:0.6;">just generated</span></div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile new">
+                  <div class="result-placeholder">[Aria · Beach 02]<br/><span style="opacity:0.6;">just generated</span></div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile">
+                  <div class="result-placeholder">[Aria · Editorial]</div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile">
+                  <div class="result-placeholder">[Aria · Gym 01]</div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile">
+                  <div class="result-placeholder">[Aria · Gym 02]</div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile">
+                  <div class="result-placeholder">[Aria · Café]</div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile">
+                  <div class="result-placeholder">[Aria · Night]</div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+                <div class="result-tile">
+                  <div class="result-placeholder">[Aria · Selfie]</div>
+                  <div class="result-actions">
+                    <button class="result-action">↓</button>
+                    <button class="result-action">▶ Video</button>
+                    <button class="result-action">♥</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('menuBtn');
+      var sidebar = document.getElementById('sidebar');
+      var backdrop = document.getElementById('sidebarBackdrop');
+      if (!btn || !sidebar) return;
+      btn.addEventListener('click', function () {
+        sidebar.classList.toggle('open');
+        backdrop.classList.toggle('open');
+      });
+      backdrop.addEventListener('click', function () {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      });
+
+      // Simple interaction: clicking presets, model, tabs, seg buttons
+      document.querySelectorAll('.model-pick:not(.model-pick-add)').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.model-pick').forEach(function (e) { e.classList.remove('active'); });
+          el.classList.add('active');
+        });
+      });
+      document.querySelectorAll('.scene-tab').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.scene-tab').forEach(function (e) { e.classList.remove('active'); });
+          el.classList.add('active');
+        });
+      });
+      document.querySelectorAll('.preset').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.preset').forEach(function (e) { e.classList.remove('active'); });
+          el.classList.add('active');
+        });
+      });
+      document.querySelectorAll('.seg').forEach(function (seg) {
+        seg.querySelectorAll('button').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            seg.querySelectorAll('button').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+          });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

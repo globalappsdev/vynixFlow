@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery · VynixFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard-shared.css" />
+  <style>
+    .gallery-controls { display: flex; gap: 12px; margin-bottom: 18px; align-items: center; flex-wrap: wrap; }
+    .filter-pill { padding: 7px 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border-strong); font-size: 12.5px; font-weight: 600; color: var(--text-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all var(--t); }
+    .filter-pill:hover { background: var(--surface); }
+    .filter-pill.active { background: var(--text); border-color: var(--text); color: #fff; }
+    .filter-pill .count { font-size: 11px; opacity: 0.7; font-weight: 500; }
+
+    .gallery-date-head { font-family: "Plus Jakarta Sans", sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3); margin: 28px 0 12px; display: flex; align-items: center; gap: 10px; }
+    .gallery-date-head::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+    .gallery-date-head:first-child { margin-top: 0; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .gallery-item { aspect-ratio: 3/4; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); position: relative; overflow: hidden; cursor: pointer; transition: transform var(--t); }
+    .gallery-item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-item.selected { outline: 2px solid var(--neon-dark); outline-offset: 2px; }
+    .gallery-placeholder { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; color: var(--text-3); font-weight: 600; text-align: center; padding: 6px; }
+    .gallery-meta { position: absolute; bottom: 6px; left: 6px; right: 6px; background: rgba(13,15,20,0.82); color: #fff; font-size: 9.5px; font-weight: 600; padding: 3px 7px; border-radius: 4px; backdrop-filter: blur(6px); display: flex; justify-content: space-between; z-index: 2; }
+    .gallery-video::before { content: "▶"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(13,15,20,0.82); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; backdrop-filter: blur(6px); z-index: 2; }
+    .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(13,15,20,0.7) 100%); opacity: 0; transition: opacity var(--t); z-index: 1; display: flex; align-items: flex-end; padding: 6px; }
+    .gallery-overlay-actions { display: flex; gap: 4px; width: 100%; }
+    .gallery-overlay-btn { flex: 1; background: rgba(255,255,255,0.95); color: var(--text); font-size: 10px; font-weight: 700; padding: 5px; border-radius: 5px; border: none; cursor: pointer; backdrop-filter: blur(6px); }
+    .gallery-check { position: absolute; top: 8px; left: 8px; width: 22px; height: 22px; border-radius: 6px; background: rgba(255,255,255,0.95); border: 1px solid var(--border); display: grid; place-items: center; font-size: 12px; color: transparent; z-index: 3; cursor: pointer; transition: all var(--t); opacity: 0; }
+    .gallery-item:hover .gallery-check, .gallery-item.selected .gallery-check { opacity: 1; }
+    .gallery-item.selected .gallery-check { background: var(--neon-dark); border-color: var(--neon-dark); color: #fff; }
+
+    .bulk-bar { position: sticky; bottom: 20px; margin-top: 24px; background: var(--text); color: #fff; border-radius: 12px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; gap: 14px; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transform: translateY(20px); transition: all var(--t); }
+    .bulk-bar.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .bulk-count { font-size: 13px; font-weight: 600; }
+    .bulk-actions { display: flex; gap: 6px; }
+    .bulk-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 7px 14px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background var(--t); font-family: inherit; }
+    .bulk-btn:hover { background: rgba(255,255,255,0.18); }
+    .bulk-btn-primary { background: var(--neon); }
+    .bulk-btn-primary:hover { background: var(--neon-dark); }
+
+    @media (max-width: 1100px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="sidebar-brand-icon">V</span>VynixFlow</div>
+      <div class="sidebar-section-label">Workspace</div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html"><span class="sidebar-icon">⌂</span>Dashboard</a></li>
+        <li><a href="generate.html"><span class="sidebar-icon">✨</span>Generate</a></li>
+        <li><a href="models.html"><span class="sidebar-icon">◉</span>My Models</a></li>
+        <li><a href="gallery.html" class="active"><span class="sidebar-icon">▦</span>Gallery</a></li>
+        <li><a href="video.html"><span class="sidebar-icon">▶</span>Video Studio</a></li>
+      </ul>
+      <div class="sidebar-section-label" style="margin-top: 14px;">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="billing.html"><span class="sidebar-icon">◈</span>Credits & Billing</a></li>
+      </ul>
+      <div class="sidebar-credits">
+        <div class="sidebar-credits-row"><span class="sidebar-credits-label">Credits</span><span class="sidebar-credits-num">237<span class="total"> / 300</span></span></div>
+        <div class="sidebar-credits-bar"><div class="sidebar-credits-fill" style="width: 79%;"></div></div>
+        <a href="billing.html" class="sidebar-credits-btn">Top up →</a>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">JM</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name">Jessica Miller</div><div class="sidebar-user-plan">Pro plan</div></div>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-mobile-menu" id="menuBtn" aria-label="Open menu"><span></span></button>
+          <div class="topbar-crumbs"><a href="dashboard.html">Dashboard</a><span class="sep">/</span><span style="color: var(--text);">Gallery</span></div>
+        </div>
+        <div class="topbar-actions">
+          <a class="btn btn-primary" href="generate.html">+ New Generation</a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div class="page-head-text">
+            <h1>Gallery</h1>
+            <p>254 generations across 3 models. Filter, bulk-download, or animate to video.</p>
+          </div>
+        </div>
+
+        <div class="gallery-controls">
+          <div class="filter-pill active">All <span class="count">254</span></div>
+          <div class="filter-pill">Aria <span class="count">142</span></div>
+          <div class="filter-pill">Sienna <span class="count">78</span></div>
+          <div class="filter-pill">Nova <span class="count">34</span></div>
+          <div style="width: 1px; height: 24px; background: var(--border);"></div>
+          <div class="filter-pill">Photos <span class="count">238</span></div>
+          <div class="filter-pill">Videos <span class="count">16</span></div>
+          <div class="filter-pill">Favorites <span class="count">24</span></div>
+          <div style="flex: 1;"></div>
+          <div class="filter-pill" style="background: transparent; border-color: transparent;">Sort: Newest ↓</div>
+        </div>
+
+        <!-- TODAY -->
+        <div class="gallery-date-head">Today · 12 items</div>
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · Beach 01]</div>
+            <div class="gallery-meta"><span>Aria</span><span>2h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · Beach 02]</div>
+            <div class="gallery-meta"><span>Aria</span><span>2h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item gallery-video">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · Beach reel]</div>
+            <div class="gallery-meta"><span>Aria · 6s</span><span>2h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · Gym 01]</div>
+            <div class="gallery-meta"><span>Aria</span><span>3h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · Gym 02]</div>
+            <div class="gallery-meta"><span>Aria</span><span>3h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Sienna · Boudoir 01]</div>
+            <div class="gallery-meta"><span>Sienna</span><span>5h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Sienna · Boudoir 02]</div>
+            <div class="gallery-meta"><span>Sienna</span><span>5h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Sienna · Lingerie]</div>
+            <div class="gallery-meta"><span>Sienna</span><span>5h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · OOTD]</div>
+            <div class="gallery-meta"><span>Aria</span><span>6h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Aria · Café]</div>
+            <div class="gallery-meta"><span>Aria</span><span>8h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+          <div class="gallery-item gallery-video">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Sienna · reel]</div>
+            <div class="gallery-meta"><span>Sienna · 4s</span><span>9h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button></div></div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-check">✓</div>
+            <div class="gallery-placeholder">[Nova · Cosplay]</div>
+            <div class="gallery-meta"><span>Nova</span><span>10h</span></div>
+            <div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div>
+          </div>
+        </div>
+
+        <!-- YESTERDAY -->
+        <div class="gallery-date-head">Yesterday · 18 items</div>
+        <div class="gallery-grid">
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Nova · Cosplay 02]</div><div class="gallery-meta"><span>Nova</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Nova · Cosplay 03]</div><div class="gallery-meta"><span>Nova</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Nova · Cosplay 04]</div><div class="gallery-meta"><span>Nova</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Aria · Editorial]</div><div class="gallery-meta"><span>Aria</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Aria · Night 01]</div><div class="gallery-meta"><span>Aria</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Aria · Night 02]</div><div class="gallery-meta"><span>Aria</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Sienna · Coffee]</div><div class="gallery-meta"><span>Sienna</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Sienna · Lifestyle]</div><div class="gallery-meta"><span>Sienna</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Aria · Selfie]</div><div class="gallery-meta"><span>Aria</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+          <div class="gallery-item"><div class="gallery-check">✓</div><div class="gallery-placeholder">[Aria · Swim 01]</div><div class="gallery-meta"><span>Aria</span><span>1d</span></div><div class="gallery-overlay"><div class="gallery-overlay-actions"><button class="gallery-overlay-btn">↓</button><button class="gallery-overlay-btn">▶</button></div></div></div>
+        </div>
+
+        <!-- BULK BAR -->
+        <div class="bulk-bar" id="bulkBar">
+          <div class="bulk-count"><span id="bulkCount">0</span> selected</div>
+          <div class="bulk-actions">
+            <button class="bulk-btn">↓ Download</button>
+            <button class="bulk-btn">▶ Animate</button>
+            <button class="bulk-btn">♥ Favorite</button>
+            <button class="bulk-btn bulk-btn-primary">Export for Instagram</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('menuBtn');
+      var sidebar = document.getElementById('sidebar');
+      var backdrop = document.getElementById('sidebarBackdrop');
+      if (btn && sidebar) {
+        btn.addEventListener('click', function () { sidebar.classList.toggle('open'); backdrop.classList.toggle('open'); });
+        backdrop.addEventListener('click', function () { sidebar.classList.remove('open'); backdrop.classList.remove('open'); });
+      }
+
+      document.querySelectorAll('.filter-pill').forEach(function (el) {
+        el.addEventListener('click', function () {
+          if (el.textContent.trim().toLowerCase().startsWith('sort')) return;
+          document.querySelectorAll('.filter-pill').forEach(function (e) {
+            if (!e.textContent.trim().toLowerCase().startsWith('sort')) e.classList.remove('active');
+          });
+          el.classList.add('active');
+        });
+      });
+
+      var bulkBar = document.getElementById('bulkBar');
+      var bulkCount = document.getElementById('bulkCount');
+      document.querySelectorAll('.gallery-check').forEach(function (check) {
+        check.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var item = check.closest('.gallery-item');
+          item.classList.toggle('selected');
+          var count = document.querySelectorAll('.gallery-item.selected').length;
+          bulkCount.textContent = count;
+          bulkBar.classList.toggle('visible', count > 0);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build a Model · VynixFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard-shared.css" />
+  <style>
+    .builder-layout { display: grid; grid-template-columns: 1fr 420px; gap: 18px; align-items: flex-start; }
+
+    /* LEFT: attributes */
+    .attrs-panel { display: flex; flex-direction: column; gap: 14px; }
+
+    .attr-group { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 18px 22px; }
+    .attr-group-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; }
+    .attr-group-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+    .attr-group-title .num { width: 22px; height: 22px; border-radius: 6px; background: var(--neon-mid); color: var(--neon-dark); display: grid; place-items: center; font-size: 11px; font-weight: 800; letter-spacing: -0.04em; }
+    .attr-group-selected { font-size: 12px; color: var(--neon-dark); font-weight: 600; }
+
+    .chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip-opt { padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 12.5px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: all var(--t); }
+    .chip-opt:hover { border-color: var(--border-strong); }
+    .chip-opt.active { background: var(--text); border-color: var(--text); color: #fff; font-weight: 600; }
+    .chip-opt.custom { background: transparent; border: 1px dashed var(--border-strong); color: var(--text-3); }
+    .chip-opt.custom:hover { color: var(--text-2); border-color: var(--text-3); }
+
+    .swatch-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .swatch { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 12.5px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: all var(--t); }
+    .swatch:hover { border-color: var(--border-strong); }
+    .swatch.active { background: var(--text); border-color: var(--text); color: #fff; font-weight: 600; }
+    .swatch-dot { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; }
+
+    /* RIGHT: preview */
+    .preview-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; position: sticky; top: 80px; overflow: hidden; }
+    .preview-img { aspect-ratio: 3/4; background: linear-gradient(145deg, #d4c8ba, #a8987a); position: relative; overflow: hidden; }
+    .preview-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(13,15,20,0.4) 100%); pointer-events: none; }
+    .preview-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,0.95); font-family: "Plus Jakarta Sans", sans-serif; font-size: 80px; font-weight: 800; letter-spacing: -0.04em; }
+    .preview-badge { position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); color: var(--text); font-size: 10.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; z-index: 2; display: inline-flex; align-items: center; gap: 5px; }
+    .preview-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--neon); }
+    .preview-seed { position: absolute; bottom: 14px; left: 14px; right: 14px; z-index: 2; color: #fff; font-size: 11px; font-weight: 600; opacity: 0.85; }
+
+    .preview-body { padding: 18px 20px; }
+    .preview-name-label { font-size: 11px; font-weight: 700; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .preview-name { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 14px; }
+    .preview-name:focus { outline: none; background: var(--bg); border-color: var(--neon); box-shadow: 0 0 0 3px var(--neon-mid); }
+
+    .preview-actions { display: flex; flex-direction: column; gap: 8px; }
+    .regen-btn { height: 42px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all var(--t); font-family: inherit; }
+    .regen-btn:hover { background: var(--surface); transform: translateY(-1px); }
+    .save-btn { height: 46px; background: var(--neon-dark); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all var(--t); font-family: inherit; }
+    .save-btn:hover { background: #28581d; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(58,125,42,0.3); }
+
+    .preview-summary { padding: 14px 20px; background: var(--surface); border-top: 1px solid var(--border); font-size: 11.5px; color: var(--text-3); display: flex; justify-content: space-between; gap: 8px; }
+    .preview-summary strong { color: var(--text); font-weight: 700; }
+
+    /* Progress bar at top */
+    .progress-row { display: flex; gap: 4px; margin-bottom: 18px; }
+    .progress-dot { flex: 1; height: 3px; background: var(--border); border-radius: 2px; transition: background var(--t); }
+    .progress-dot.done { background: var(--neon-dark); }
+    .progress-dot.active { background: var(--neon); }
+
+    @media (max-width: 1100px) {
+      .builder-layout { grid-template-columns: 1fr 360px; }
+    }
+    @media (max-width: 900px) {
+      .builder-layout { grid-template-columns: 1fr; }
+      .preview-panel { position: static; }
+      .preview-img { aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-icon">V</span>
+        VynixFlow
+      </div>
+      <div class="sidebar-section-label">Workspace</div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html"><span class="sidebar-icon">⌂</span>Dashboard</a></li>
+        <li><a href="generate.html"><span class="sidebar-icon">✨</span>Generate</a></li>
+        <li><a href="models.html" class="active"><span class="sidebar-icon">◉</span>My Models</a></li>
+        <li><a href="gallery.html"><span class="sidebar-icon">▦</span>Gallery</a></li>
+        <li><a href="video.html"><span class="sidebar-icon">▶</span>Video Studio</a></li>
+      </ul>
+      <div class="sidebar-section-label" style="margin-top: 14px;">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="billing.html"><span class="sidebar-icon">◈</span>Credits & Billing</a></li>
+      </ul>
+      <div class="sidebar-credits">
+        <div class="sidebar-credits-row">
+          <span class="sidebar-credits-label">Credits</span>
+          <span class="sidebar-credits-num">237<span class="total"> / 300</span></span>
+        </div>
+        <div class="sidebar-credits-bar"><div class="sidebar-credits-fill" style="width: 79%;"></div></div>
+        <a href="billing.html" class="sidebar-credits-btn">Top up →</a>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">JM</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Jessica Miller</div>
+          <div class="sidebar-user-plan">Pro plan</div>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-mobile-menu" id="menuBtn" aria-label="Open menu"><span></span></button>
+          <div class="topbar-crumbs"><a href="dashboard.html">Dashboard</a><span class="sep">/</span><a href="models.html">My Models</a><span class="sep">/</span><span style="color: var(--text);">Build New</span></div>
+        </div>
+        <div class="topbar-actions">
+          <a class="btn btn-ghost" href="models.html">Cancel</a>
+          <button class="btn btn-outline">Import reference photo</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div class="page-head-text">
+            <h1>Build a creator</h1>
+            <p>Every attribute locked. Every generation consistent. Your model stays the same person, forever.</p>
+          </div>
+        </div>
+
+        <div class="progress-row">
+          <div class="progress-dot done"></div>
+          <div class="progress-dot done"></div>
+          <div class="progress-dot done"></div>
+          <div class="progress-dot done"></div>
+          <div class="progress-dot active"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <div class="builder-layout">
+
+          <!-- LEFT: ATTRIBUTES -->
+          <div class="attrs-panel">
+
+            <!-- 01 Age -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">1</span>Age range</div>
+                <span class="attr-group-selected">22–26</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt">18–21</div>
+                <div class="chip-opt active">22–26</div>
+                <div class="chip-opt">26–30</div>
+                <div class="chip-opt">30–34</div>
+                <div class="chip-opt">34–38</div>
+                <div class="chip-opt">38–42</div>
+                <div class="chip-opt">42+</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 02 Ethnicity -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">2</span>Ethnicity</div>
+                <span class="attr-group-selected">Mixed</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt">Caucasian</div>
+                <div class="chip-opt">Latina</div>
+                <div class="chip-opt">Asian</div>
+                <div class="chip-opt">South Asian</div>
+                <div class="chip-opt">Black</div>
+                <div class="chip-opt">Middle Eastern</div>
+                <div class="chip-opt active">Mixed</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 03 Body Type -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">3</span>Body type</div>
+                <span class="attr-group-selected">Athletic</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt">Slim</div>
+                <div class="chip-opt active">Athletic</div>
+                <div class="chip-opt">Fit</div>
+                <div class="chip-opt">Curvy</div>
+                <div class="chip-opt">Hourglass</div>
+                <div class="chip-opt">Plus</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 04 Skin Tone -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">4</span>Skin tone</div>
+                <span class="attr-group-selected">Warm beige</span>
+              </div>
+              <div class="swatch-list">
+                <div class="swatch"><span class="swatch-dot" style="background: #fce3cf;"></span>Porcelain</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #f0cfac;"></span>Fair</div>
+                <div class="swatch active"><span class="swatch-dot" style="background: #e0b088;"></span>Warm beige</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #c89068;"></span>Tan</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #a06840;"></span>Olive</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #7a4a28;"></span>Brown</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #4a2818;"></span>Deep</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 05 Hair Color -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">5</span>Hair color</div>
+                <span class="attr-group-selected">Chocolate brown</span>
+              </div>
+              <div class="swatch-list">
+                <div class="swatch"><span class="swatch-dot" style="background: #2b1a0a;"></span>Black</div>
+                <div class="swatch active"><span class="swatch-dot" style="background: #4a2e1a;"></span>Chocolate</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #6b4a2e;"></span>Brunette</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #a47c4a;"></span>Caramel</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #d9b888;"></span>Honey</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #e8c98a;"></span>Blonde</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #f5e4b8;"></span>Platinum</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #883a20;"></span>Auburn</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #b84a30;"></span>Red</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 06 Hair Length -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">6</span>Hair length</div>
+                <span class="attr-group-selected">Long</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt">Pixie</div>
+                <div class="chip-opt">Short</div>
+                <div class="chip-opt">Shoulder</div>
+                <div class="chip-opt">Medium</div>
+                <div class="chip-opt active">Long</div>
+                <div class="chip-opt">Very long</div>
+              </div>
+            </div>
+
+            <!-- 07 Hair Texture -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">7</span>Hair texture</div>
+                <span class="attr-group-selected">Wavy</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt">Straight</div>
+                <div class="chip-opt active">Wavy</div>
+                <div class="chip-opt">Curly</div>
+                <div class="chip-opt">Coiled</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 08 Eye Color -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">8</span>Eye color</div>
+                <span class="attr-group-selected">Hazel</span>
+              </div>
+              <div class="swatch-list">
+                <div class="swatch"><span class="swatch-dot" style="background: #1a4a8a;"></span>Blue</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #88b8d8;"></span>Light blue</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #3a6838;"></span>Green</div>
+                <div class="swatch active"><span class="swatch-dot" style="background: #886840;"></span>Hazel</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #4a2e1a;"></span>Brown</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #2b1a0a;"></span>Dark brown</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #686868;"></span>Gray</div>
+                <div class="swatch"><span class="swatch-dot" style="background: #886838;"></span>Amber</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 09 Face Style -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">9</span>Face style</div>
+                <span class="attr-group-selected">Natural</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt">Soft</div>
+                <div class="chip-opt active">Natural</div>
+                <div class="chip-opt">Striking</div>
+                <div class="chip-opt">Editorial</div>
+                <div class="chip-opt">Girl-next-door</div>
+                <div class="chip-opt custom">+ Custom</div>
+              </div>
+            </div>
+
+            <!-- 10 Occupation -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">10</span>Occupation vibe</div>
+                <span class="attr-group-selected">Model</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt active">Model</div>
+                <div class="chip-opt">Fitness coach</div>
+                <div class="chip-opt">Influencer</div>
+                <div class="chip-opt">Student</div>
+                <div class="chip-opt">Artist</div>
+                <div class="chip-opt">Designer</div>
+                <div class="chip-opt">Dancer</div>
+                <div class="chip-opt">Yoga instructor</div>
+                <div class="chip-opt">Photographer</div>
+                <div class="chip-opt">Barista</div>
+                <div class="chip-opt custom">+ 9 more</div>
+              </div>
+            </div>
+
+            <!-- 11 Niche -->
+            <div class="attr-group">
+              <div class="attr-group-head">
+                <div class="attr-group-title"><span class="num">11</span>Primary niche</div>
+                <span class="attr-group-selected">Lifestyle</span>
+              </div>
+              <div class="chip-list">
+                <div class="chip-opt active">Lifestyle</div>
+                <div class="chip-opt">Fashion</div>
+                <div class="chip-opt">Fitness</div>
+                <div class="chip-opt">Swim</div>
+                <div class="chip-opt">Boudoir</div>
+                <div class="chip-opt">Cosplay</div>
+                <div class="chip-opt">Travel</div>
+                <div class="chip-opt">Gaming</div>
+                <div class="chip-opt custom">+ 11 more</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: PREVIEW -->
+          <div class="preview-panel">
+            <div class="preview-img">
+              <span class="preview-badge">Preview</span>
+              <div class="preview-placeholder">A</div>
+              <div class="preview-seed">Seed #AX-48291 · Locked once saved</div>
+            </div>
+            <div class="preview-body">
+              <div class="preview-name-label">Name your model</div>
+              <input type="text" class="preview-name" value="Aria" placeholder="Give her a name…" />
+              <div class="preview-actions">
+                <button class="regen-btn">↻ Regenerate preview (free)</button>
+                <button class="save-btn">Save model & Generate →</button>
+              </div>
+            </div>
+            <div class="preview-summary">
+              <span>11 attributes set</span>
+              <span><strong>Unlimited</strong> re-rolls after save</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('menuBtn');
+      var sidebar = document.getElementById('sidebar');
+      var backdrop = document.getElementById('sidebarBackdrop');
+      if (!btn || !sidebar) return;
+      btn.addEventListener('click', function () {
+        sidebar.classList.toggle('open');
+        backdrop.classList.toggle('open');
+      });
+      backdrop.addEventListener('click', function () {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      });
+
+      document.querySelectorAll('.attr-group').forEach(function (group) {
+        group.querySelectorAll('.chip-opt:not(.custom), .swatch').forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            group.querySelectorAll('.chip-opt, .swatch').forEach(function (o) { o.classList.remove('active'); });
+            opt.classList.add('active');
+            var summary = group.querySelector('.attr-group-selected');
+            if (summary) summary.textContent = opt.textContent.trim();
+          });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

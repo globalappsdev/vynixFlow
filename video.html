@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Studio · VynixFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard-shared.css" />
+  <style>
+    .video-layout { display: grid; grid-template-columns: 380px 1fr; gap: 18px; align-items: flex-start; }
+    .video-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; position: sticky; top: 80px; overflow: hidden; }
+    .v-section { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+    .v-section:last-child { border-bottom: none; }
+    .v-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; display: flex; justify-content: space-between; }
+
+    .source-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .source-tile { aspect-ratio: 3/4; border-radius: 10px; background: var(--surface-2); border: 2px solid transparent; cursor: pointer; position: relative; overflow: hidden; transition: border-color var(--t); }
+    .source-tile.active { border-color: var(--neon-dark); }
+    .source-tile-placeholder { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; color: var(--text-3); font-weight: 600; padding: 6px; text-align: center; }
+    .source-tile-label { position: absolute; bottom: 6px; left: 6px; background: rgba(13,15,20,0.8); color: #fff; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; }
+    .source-more { grid-column: span 2; padding: 9px; text-align: center; background: var(--surface); border: 1px dashed var(--border-strong); border-radius: 10px; font-size: 12px; font-weight: 600; color: var(--text-2); cursor: pointer; }
+    .source-more:hover { background: var(--neon-pale); color: var(--neon-dark); }
+
+    .motion-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .motion-opt { padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: all var(--t); }
+    .motion-opt.active { background: var(--text); border-color: var(--text); color: #fff; }
+    .motion-opt-name { font-size: 12.5px; font-weight: 700; }
+    .motion-opt-desc { font-size: 10.5px; margin-top: 2px; opacity: 0.7; }
+
+    .seg { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+    .seg button { flex: 1; padding: 6px 8px; border: none; background: transparent; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all var(--t); font-family: inherit; }
+    .seg button.active { background: var(--bg); color: var(--text); box-shadow: var(--shadow-sm); }
+
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+    .slider-row input { flex: 1; height: 4px; background: var(--border); border-radius: 2px; appearance: none; -webkit-appearance: none; outline: none; cursor: pointer; }
+    .slider-row input::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--neon-dark); cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .slider-val { font-size: 12.5px; font-weight: 700; color: var(--text); min-width: 40px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .v-cta { padding: 18px 20px; background: var(--surface); }
+    .v-btn { width: 100%; height: 48px; background: var(--neon-dark); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all var(--t); font-family: inherit; }
+    .v-btn:hover { background: #28581d; transform: translateY(-1px); }
+    .v-btn .cost { background: rgba(255,255,255,0.18); padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+
+    /* Preview area */
+    .preview-area { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .preview-head { padding: 16px 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .preview-body { padding: 24px; background: radial-gradient(circle at center, #1a1f2a, #0d0f14); min-height: 480px; display: grid; place-items: center; position: relative; }
+    .preview-video { width: 340px; aspect-ratio: 9/16; border-radius: 14px; background: linear-gradient(145deg, #c8d4b8, #8fb080); position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .preview-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(13,15,20,0.3) 100%); pointer-events: none; }
+    .preview-label { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,0.92); font-family: "Plus Jakarta Sans", sans-serif; font-size: 90px; font-weight: 800; letter-spacing: -0.04em; }
+    .play-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.92); display: grid; place-items: center; font-size: 18px; color: var(--text); cursor: pointer; backdrop-filter: blur(8px); transition: transform var(--t); }
+    .play-overlay:hover { transform: translate(-50%, -50%) scale(1.08); }
+    .video-hud { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; z-index: 2; }
+    .hud-chip { background: rgba(13,15,20,0.72); color: #fff; font-size: 10.5px; font-weight: 600; padding: 4px 9px; border-radius: 999px; backdrop-filter: blur(8px); }
+    .timeline { position: absolute; bottom: 14px; left: 14px; right: 14px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; z-index: 2; }
+    .timeline-fill { height: 100%; width: 35%; background: #fff; border-radius: 2px; }
+    .preview-footer { padding: 16px 22px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .preview-meta { font-size: 12.5px; color: var(--text-3); }
+    .preview-meta strong { color: var(--text); }
+    .preview-actions { display: flex; gap: 6px; }
+
+    /* Recent videos strip */
+    .recent-vids { margin-top: 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+    .recent-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .recent-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .recent-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .recent-vid { aspect-ratio: 9/16; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); position: relative; overflow: hidden; cursor: pointer; transition: transform var(--t); }
+    .recent-vid:hover { transform: translateY(-2px); }
+    .recent-vid-ph { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10px; color: var(--text-3); font-weight: 600; }
+    .recent-vid::before { content: "▶"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(13,15,20,0.82); color: #fff; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 9px; backdrop-filter: blur(6px); z-index: 2; }
+    .recent-vid-meta { position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(13,15,20,0.82); color: #fff; font-size: 8.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px; display: flex; justify-content: space-between; z-index: 2; }
+
+    @media (max-width: 1100px) {
+      .video-layout { grid-template-columns: 340px 1fr; }
+      .recent-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .video-layout { grid-template-columns: 1fr; }
+      .video-panel { position: static; }
+      .preview-video { width: 260px; }
+      .recent-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .recent-grid { grid-template-columns: repeat(3, 1fr); }
+      .preview-body { padding: 18px; min-height: 400px; }
+      .preview-video { width: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="sidebar-brand-icon">V</span>VynixFlow</div>
+      <div class="sidebar-section-label">Workspace</div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html"><span class="sidebar-icon">⌂</span>Dashboard</a></li>
+        <li><a href="generate.html"><span class="sidebar-icon">✨</span>Generate</a></li>
+        <li><a href="models.html"><span class="sidebar-icon">◉</span>My Models</a></li>
+        <li><a href="gallery.html"><span class="sidebar-icon">▦</span>Gallery</a></li>
+        <li><a href="video.html" class="active"><span class="sidebar-icon">▶</span>Video Studio</a></li>
+      </ul>
+      <div class="sidebar-section-label" style="margin-top: 14px;">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="billing.html"><span class="sidebar-icon">◈</span>Credits & Billing</a></li>
+      </ul>
+      <div class="sidebar-credits">
+        <div class="sidebar-credits-row"><span class="sidebar-credits-label">Credits</span><span class="sidebar-credits-num">237<span class="total"> / 300</span></span></div>
+        <div class="sidebar-credits-bar"><div class="sidebar-credits-fill" style="width: 79%;"></div></div>
+        <a href="billing.html" class="sidebar-credits-btn">Top up →</a>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">JM</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name">Jessica Miller</div><div class="sidebar-user-plan">Pro plan</div></div>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-mobile-menu" id="menuBtn" aria-label="Open menu"><span></span></button>
+          <div class="topbar-crumbs"><a href="dashboard.html">Dashboard</a><span class="sep">/</span><span style="color: var(--text);">Video Studio</span></div>
+        </div>
+        <div class="topbar-actions">
+          <a class="btn btn-ghost" href="gallery.html">Gallery →</a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div class="page-head-text">
+            <h1>Video Studio</h1>
+            <p>Turn any photo into a short clip. Reels, Stories, TikTok, Fanvue PPV — same model, fluid motion.</p>
+          </div>
+        </div>
+
+        <div class="video-layout">
+
+          <!-- LEFT PANEL -->
+          <div class="video-panel">
+            <div class="v-section">
+              <div class="v-label">Source Photo <a href="gallery.html" style="color: var(--neon-dark); text-transform: none; letter-spacing: 0; font-weight: 600;">Browse Gallery →</a></div>
+              <div class="source-picker">
+                <div class="source-tile active">
+                  <div class="source-tile-placeholder">[Aria · Beach 01]</div>
+                  <span class="source-tile-label">Selected</span>
+                </div>
+                <div class="source-tile">
+                  <div class="source-tile-placeholder">[Aria · Beach 02]</div>
+                  <span class="source-tile-label">Aria</span>
+                </div>
+                <div class="source-tile">
+                  <div class="source-tile-placeholder">[Sienna · Boudoir]</div>
+                  <span class="source-tile-label">Sienna</span>
+                </div>
+                <div class="source-tile">
+                  <div class="source-tile-placeholder">[Nova · Cosplay]</div>
+                  <span class="source-tile-label">Nova</span>
+                </div>
+                <div class="source-more">+ Upload a photo</div>
+              </div>
+            </div>
+
+            <div class="v-section">
+              <div class="v-label">Motion Style</div>
+              <div class="motion-opts">
+                <div class="motion-opt active">
+                  <div class="motion-opt-name">Subtle</div>
+                  <div class="motion-opt-desc">Hair sway, blink, micro-movement</div>
+                </div>
+                <div class="motion-opt">
+                  <div class="motion-opt-name">Natural</div>
+                  <div class="motion-opt-desc">Head turn, body shift, breathe</div>
+                </div>
+                <div class="motion-opt">
+                  <div class="motion-opt-name">Dynamic</div>
+                  <div class="motion-opt-desc">Walking, posing, gesture</div>
+                </div>
+                <div class="motion-opt">
+                  <div class="motion-opt-name">Camera</div>
+                  <div class="motion-opt-desc">Zoom, pan, dolly movement</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="v-section">
+              <div class="v-label">Duration</div>
+              <div class="slider-row" style="margin-bottom: 14px;">
+                <input type="range" min="2" max="10" value="6" />
+                <span class="slider-val">6.0s</span>
+              </div>
+              <div class="v-label" style="margin-top: 10px;">Aspect Ratio</div>
+              <div class="seg">
+                <button class="active">9:16</button>
+                <button>1:1</button>
+                <button>4:5</button>
+                <button>16:9</button>
+              </div>
+            </div>
+
+            <div class="v-section">
+              <div class="v-label">Optional Prompt <span style="text-transform: none; letter-spacing: 0; color: var(--text-3); font-weight: 500;">describe the motion</span></div>
+              <textarea class="input" placeholder="e.g. She turns her head slowly toward the camera and smiles" style="min-height: 70px; font-size: 13px;">She walks slowly along the shoreline, hair moving in the wind</textarea>
+            </div>
+
+            <div class="v-cta">
+              <button class="v-btn">
+                Animate ▶
+                <span class="cost">25 credits</span>
+              </button>
+              <div style="text-align: center; font-size: 11.5px; color: var(--text-3); margin-top: 8px;">6s · 9:16 · Subtle motion · ~60 seconds</div>
+            </div>
+          </div>
+
+          <!-- RIGHT: PREVIEW -->
+          <div>
+            <div class="preview-area">
+              <div class="preview-head">
+                <div>
+                  <div class="results-head-title" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800;">Preview</div>
+                  <div style="font-size: 12.5px; color: var(--text-3); margin-top: 1px;">Aria · 6s · Subtle motion · 9:16</div>
+                </div>
+                <span class="tag tag-live">Ready to export</span>
+              </div>
+              <div class="preview-body">
+                <div class="preview-video">
+                  <div class="video-hud">
+                    <span class="hud-chip">9:16</span>
+                    <span class="hud-chip">00:06</span>
+                  </div>
+                  <div class="preview-label">A</div>
+                  <div class="play-overlay">▶</div>
+                  <div class="timeline"><div class="timeline-fill"></div></div>
+                </div>
+              </div>
+              <div class="preview-footer">
+                <div class="preview-meta"><strong>Reel-ready</strong> · Platform-safe metadata · 4K export</div>
+                <div class="preview-actions">
+                  <button class="btn btn-outline">Regenerate</button>
+                  <button class="btn btn-primary">↓ Download MP4</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="recent-vids">
+              <div class="recent-head">
+                <div class="recent-title">Recent Videos</div>
+                <a href="gallery.html" class="btn btn-ghost">View all →</a>
+              </div>
+              <div class="recent-grid">
+                <div class="recent-vid"><div class="recent-vid-ph">[Aria · gym]</div><div class="recent-vid-meta"><span>Aria</span><span>4s</span></div></div>
+                <div class="recent-vid"><div class="recent-vid-ph">[Sienna · reel]</div><div class="recent-vid-meta"><span>Sienna</span><span>6s</span></div></div>
+                <div class="recent-vid"><div class="recent-vid-ph">[Aria · OOTD]</div><div class="recent-vid-meta"><span>Aria</span><span>5s</span></div></div>
+                <div class="recent-vid"><div class="recent-vid-ph">[Nova · pose]</div><div class="recent-vid-meta"><span>Nova</span><span>4s</span></div></div>
+                <div class="recent-vid"><div class="recent-vid-ph">[Aria · walk]</div><div class="recent-vid-meta"><span>Aria</span><span>8s</span></div></div>
+                <div class="recent-vid"><div class="recent-vid-ph">[Sienna · turn]</div><div class="recent-vid-meta"><span>Sienna</span><span>5s</span></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('menuBtn');
+      var sidebar = document.getElementById('sidebar');
+      var backdrop = document.getElementById('sidebarBackdrop');
+      if (btn && sidebar) {
+        btn.addEventListener('click', function () { sidebar.classList.toggle('open'); backdrop.classList.toggle('open'); });
+        backdrop.addEventListener('click', function () { sidebar.classList.remove('open'); backdrop.classList.remove('open'); });
+      }
+      document.querySelectorAll('.source-tile').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.source-tile').forEach(function (e) { e.classList.remove('active'); });
+          el.classList.add('active');
+        });
+      });
+      document.querySelectorAll('.motion-opt').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.motion-opt').forEach(function (e) { e.classList.remove('active'); });
+          el.classList.add('active');
+        });
+      });
+      document.querySelectorAll('.seg').forEach(function (seg) {
+        seg.querySelectorAll('button').forEach(function (b) {
+          b.addEventListener('click', function () {
+            seg.querySelectorAll('button').forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+          });
+        });
+      });
+      var slider = document.querySelector('input[type="range"]');
+      var val = document.querySelector('.slider-val');
+      if (slider && val) {
+        slider.addEventListener('input', function () { val.textContent = parseFloat(slider.value).toFixed(1) + 's'; });
+      }
+    })();
+  </script>
+
+</body>
+</html>
