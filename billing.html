@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credits & Billing · VynixFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard-shared.css" />
+  <style>
+    .billing-grid { display: grid; grid-template-columns: 1fr 340px; gap: 18px; align-items: flex-start; }
+
+    /* Usage hero */
+    .usage-card { background: linear-gradient(135deg, var(--text) 0%, #1a1f2a 100%); color: #fff; border-radius: 16px; padding: 28px 32px; position: relative; overflow: hidden; margin-bottom: 18px; }
+    .usage-card::before { content: ""; position: absolute; top: -30%; right: -10%; width: 360px; height: 360px; background: radial-gradient(circle, rgba(58,125,42,0.22), transparent 60%); pointer-events: none; }
+    .usage-row { position: relative; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px; }
+    .usage-num-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+    .usage-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 56px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .usage-total { font-size: 22px; color: rgba(255,255,255,0.5); font-weight: 600; }
+    .usage-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+    .usage-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .usage-progress { margin-top: 20px; position: relative; }
+    .usage-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .usage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--neon), #5aa042); border-radius: 3px; transition: width 0.6s ease; }
+    .usage-bar-labels { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+    .usage-reset { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+    /* Activity chart */
+    .chart-card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .chart-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+    .chart-switcher { display: flex; gap: 4px; }
+    .chart-switch { padding: 5px 11px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: 11.5px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all var(--t); }
+    .chart-switch.active { background: var(--text); border-color: var(--text); color: #fff; }
+    .chart { display: flex; align-items: flex-end; gap: 10px; height: 180px; padding: 16px 0 24px; }
+    .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; position: relative; }
+    .chart-bar-2 { width: 100%; background: var(--neon-mid); border-radius: 6px 6px 0 0; transition: background var(--t); cursor: pointer; position: relative; min-height: 6px; }
+    .chart-bar-2:hover { background: var(--neon); }
+    .chart-bar-2.today { background: var(--neon); }
+    .chart-bar-2.today::after { content: "Today"; position: absolute; top: -22px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+    .chart-bar-wrap-label { font-size: 11px; color: var(--text-3); font-weight: 600; position: absolute; bottom: 0; }
+    .chart-bar-val { position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%); font-size: 11px; font-weight: 700; color: var(--text); padding-bottom: 4px; opacity: 0; transition: opacity var(--t); }
+    .chart-bar-wrap:hover .chart-bar-val { opacity: 1; }
+    .chart-footer { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .chart-stat { }
+    .chart-stat-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+    .chart-stat-label { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    /* Plan card */
+    .plan-card { background: var(--bg); border: 1px solid var(--neon-border); border-radius: 14px; padding: 22px; }
+    .plan-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+    .plan-tier-lbl { display: inline-block; background: var(--neon-dark); color: #fff; font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+    .plan-name-big { font-family: "Plus Jakarta Sans", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; }
+    .plan-price-big { display: flex; align-items: baseline; gap: 5px; margin-top: 2px; }
+    .plan-price-big strong { font-family: "Plus Jakarta Sans", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+    .plan-price-big span { font-size: 12.5px; color: var(--text-3); }
+    .plan-features { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 18px; }
+    .plan-features li { list-style: none; font-size: 12.5px; color: var(--text-2); display: flex; gap: 8px; align-items: flex-start; }
+    .plan-features li::before { content: "✓"; color: var(--neon-dark); font-weight: 700; flex-shrink: 0; }
+    .plan-actions { display: flex; gap: 6px; }
+    .plan-actions .btn { flex: 1; }
+
+    /* Top-ups */
+    .topup-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .topup-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; cursor: pointer; transition: all var(--t); position: relative; }
+    .topup-card:hover { border-color: var(--neon-border); background: var(--neon-pale); }
+    .topup-card.best { border-color: var(--neon-dark); background: var(--neon-pale); }
+    .topup-card.best::after { content: "Best Value"; position: absolute; top: -8px; right: 10px; background: var(--neon-dark); color: #fff; font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 999px; }
+    .topup-credits { font-family: "Plus Jakarta Sans", sans-serif; font-size: 19px; font-weight: 800; letter-spacing: -0.03em; }
+    .topup-price { font-size: 13px; color: var(--neon-dark); font-weight: 700; margin-top: 2px; }
+    .topup-rate { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    /* Invoice table */
+    .invoice-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .invoice-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); border-bottom: 1px solid var(--border); background: var(--surface); }
+    .invoice-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-2); }
+    .invoice-table td:first-child { font-weight: 600; color: var(--text); }
+    .invoice-table tr:last-child td { border-bottom: none; }
+    .invoice-amount { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; color: var(--text); }
+    .invoice-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; color: var(--neon-dark); padding: 2px 8px; border-radius: 999px; background: var(--neon-pale); }
+    .invoice-action { color: var(--text-3); cursor: pointer; transition: color var(--t); }
+    .invoice-action:hover { color: var(--text); }
+
+    @media (max-width: 1000px) {
+      .billing-grid { grid-template-columns: 1fr; }
+      .usage-num { font-size: 44px; }
+    }
+    @media (max-width: 600px) {
+      .chart-footer { grid-template-columns: repeat(2, 1fr); }
+      .topup-grid { grid-template-columns: 1fr; }
+      .invoice-table th, .invoice-table td { padding: 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="sidebar-brand-icon">V</span>VynixFlow</div>
+      <div class="sidebar-section-label">Workspace</div>
+      <ul class="sidebar-nav">
+        <li><a href="dashboard.html"><span class="sidebar-icon">⌂</span>Dashboard</a></li>
+        <li><a href="generate.html"><span class="sidebar-icon">✨</span>Generate</a></li>
+        <li><a href="models.html"><span class="sidebar-icon">◉</span>My Models</a></li>
+        <li><a href="gallery.html"><span class="sidebar-icon">▦</span>Gallery</a></li>
+        <li><a href="video.html"><span class="sidebar-icon">▶</span>Video Studio</a></li>
+      </ul>
+      <div class="sidebar-section-label" style="margin-top: 14px;">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="billing.html" class="active"><span class="sidebar-icon">◈</span>Credits & Billing</a></li>
+      </ul>
+      <div class="sidebar-credits">
+        <div class="sidebar-credits-row"><span class="sidebar-credits-label">Credits</span><span class="sidebar-credits-num">237<span class="total"> / 300</span></span></div>
+        <div class="sidebar-credits-bar"><div class="sidebar-credits-fill" style="width: 79%;"></div></div>
+        <a href="billing.html" class="sidebar-credits-btn">Top up →</a>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">JM</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name">Jessica Miller</div><div class="sidebar-user-plan">Pro plan</div></div>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-mobile-menu" id="menuBtn" aria-label="Open menu"><span></span></button>
+          <div class="topbar-crumbs"><a href="dashboard.html">Dashboard</a><span class="sep">/</span><span style="color: var(--text);">Credits & Billing</span></div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-outline">Manage payment</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div class="page-head-text">
+            <h1>Credits & Billing</h1>
+            <p>Your usage, plan, top-ups, and invoice history.</p>
+          </div>
+        </div>
+
+        <!-- USAGE HERO -->
+        <div class="usage-card">
+          <div class="usage-row">
+            <div>
+              <div class="usage-label">Credits remaining this cycle</div>
+              <div class="usage-num-row">
+                <span class="usage-num">63</span>
+                <span class="usage-total">/ 300</span>
+              </div>
+              <div class="usage-sub">You've used 237 credits — on track for your busiest week yet.</div>
+            </div>
+            <div class="usage-reset">↻ Resets in 12 days · Nov 12</div>
+          </div>
+          <div class="usage-progress">
+            <div class="usage-bar"><div class="usage-bar-fill" style="width: 79%;"></div></div>
+            <div class="usage-bar-labels">
+              <span>237 used · 79%</span>
+              <span>63 remaining</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="billing-grid">
+
+          <div style="display: flex; flex-direction: column; gap: 18px;">
+
+            <!-- Activity chart -->
+            <div class="chart-card">
+              <div class="chart-head">
+                <div>
+                  <div class="card-title">Generation Activity</div>
+                  <div class="card-sub">Posts generated · last 7 days</div>
+                </div>
+                <div class="chart-switcher">
+                  <div class="chart-switch">Day</div>
+                  <div class="chart-switch active">Week</div>
+                  <div class="chart-switch">Month</div>
+                </div>
+              </div>
+              <div class="chart">
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">3</span>
+                  <div class="chart-bar-2" style="height: 22%;"></div>
+                  <span class="chart-bar-wrap-label">Sun</span>
+                </div>
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">7</span>
+                  <div class="chart-bar-2" style="height: 46%;"></div>
+                  <span class="chart-bar-wrap-label">Mon</span>
+                </div>
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">5</span>
+                  <div class="chart-bar-2" style="height: 33%;"></div>
+                  <span class="chart-bar-wrap-label">Tue</span>
+                </div>
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">11</span>
+                  <div class="chart-bar-2" style="height: 72%;"></div>
+                  <span class="chart-bar-wrap-label">Wed</span>
+                </div>
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">8</span>
+                  <div class="chart-bar-2" style="height: 52%;"></div>
+                  <span class="chart-bar-wrap-label">Thu</span>
+                </div>
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">14</span>
+                  <div class="chart-bar-2" style="height: 92%;"></div>
+                  <span class="chart-bar-wrap-label">Fri</span>
+                </div>
+                <div class="chart-bar-wrap">
+                  <span class="chart-bar-val">15</span>
+                  <div class="chart-bar-2 today" style="height: 100%;"></div>
+                  <span class="chart-bar-wrap-label">Sat</span>
+                </div>
+              </div>
+              <div class="chart-footer">
+                <div class="chart-stat">
+                  <div class="chart-stat-num">63</div>
+                  <div class="chart-stat-label">Photos this week</div>
+                </div>
+                <div class="chart-stat">
+                  <div class="chart-stat-num">9.0</div>
+                  <div class="chart-stat-label">Daily average</div>
+                </div>
+                <div class="chart-stat">
+                  <div class="chart-stat-num">+23%</div>
+                  <div class="chart-stat-label">vs last week</div>
+                </div>
+                <div class="chart-stat">
+                  <div class="chart-stat-num">Fri</div>
+                  <div class="chart-stat-label">Most active day</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invoice history -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+              <div style="padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div class="card-title">Billing History</div>
+                  <div class="card-sub">Last 6 months</div>
+                </div>
+                <button class="btn btn-ghost">Download all →</button>
+              </div>
+              <table class="invoice-table">
+                <thead>
+                  <tr><th>Invoice</th><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th></th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>#INV-00847</td><td>Oct 12, 2026</td><td>Pro plan · monthly</td><td class="invoice-amount">$49.00</td><td><span class="invoice-status">● Paid</span></td><td><span class="invoice-action">↓</span></td></tr>
+                  <tr><td>#INV-00792</td><td>Oct 03, 2026</td><td>Top-up · 150 credits</td><td class="invoice-amount">$25.00</td><td><span class="invoice-status">● Paid</span></td><td><span class="invoice-action">↓</span></td></tr>
+                  <tr><td>#INV-00741</td><td>Sep 12, 2026</td><td>Pro plan · monthly</td><td class="invoice-amount">$49.00</td><td><span class="invoice-status">● Paid</span></td><td><span class="invoice-action">↓</span></td></tr>
+                  <tr><td>#INV-00698</td><td>Aug 28, 2026</td><td>Top-up · 50 credits</td><td class="invoice-amount">$10.00</td><td><span class="invoice-status">● Paid</span></td><td><span class="invoice-action">↓</span></td></tr>
+                  <tr><td>#INV-00645</td><td>Aug 12, 2026</td><td>Pro plan · monthly</td><td class="invoice-amount">$49.00</td><td><span class="invoice-status">● Paid</span></td><td><span class="invoice-action">↓</span></td></tr>
+                  <tr><td>#INV-00592</td><td>Jul 12, 2026</td><td>Pro plan · monthly</td><td class="invoice-amount">$49.00</td><td><span class="invoice-status">● Paid</span></td><td><span class="invoice-action">↓</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div style="display: flex; flex-direction: column; gap: 18px;">
+
+            <!-- Current plan -->
+            <div class="plan-card">
+              <div class="plan-top">
+                <div>
+                  <span class="plan-tier-lbl">Current Plan</span>
+                  <div class="plan-name-big">Pro</div>
+                  <div class="plan-price-big"><strong>$49</strong><span>/ month</span></div>
+                </div>
+              </div>
+              <ul class="plan-features">
+                <li>300 generations per month</li>
+                <li>All 80+ scene presets</li>
+                <li>Photo-to-video animation</li>
+                <li>Import your own model</li>
+                <li>Batch up to 50 at once</li>
+                <li>Priority queue · Platform-safe export</li>
+              </ul>
+              <div class="plan-actions">
+                <button class="btn btn-primary">Upgrade to Unlimited</button>
+                <button class="btn btn-outline">Change</button>
+              </div>
+              <div style="margin-top: 12px; font-size: 11.5px; color: var(--text-3); text-align: center;">Renews Nov 12, 2026 · Cancel anytime</div>
+            </div>
+
+            <!-- Top-ups -->
+            <div class="card">
+              <div class="card-head" style="margin-bottom: 6px;">
+                <div>
+                  <div class="card-title">Top up credits</div>
+                  <div class="card-sub">One-time · never expires</div>
+                </div>
+              </div>
+              <div class="topup-grid" style="margin-top: 14px;">
+                <div class="topup-card">
+                  <div class="topup-credits">50 <span style="font-size: 12px; color: var(--text-3); font-weight: 500;">credits</span></div>
+                  <div class="topup-price">$10</div>
+                  <div class="topup-rate">$0.20 / credit</div>
+                </div>
+                <div class="topup-card">
+                  <div class="topup-credits">150 <span style="font-size: 12px; color: var(--text-3); font-weight: 500;">credits</span></div>
+                  <div class="topup-price">$25</div>
+                  <div class="topup-rate">$0.17 / credit</div>
+                </div>
+                <div class="topup-card best">
+                  <div class="topup-credits">350 <span style="font-size: 12px; color: var(--text-3); font-weight: 500;">credits</span></div>
+                  <div class="topup-price">$50</div>
+                  <div class="topup-rate">$0.14 / credit</div>
+                </div>
+                <div class="topup-card">
+                  <div class="topup-credits">800 <span style="font-size: 12px; color: var(--text-3); font-weight: 500;">credits</span></div>
+                  <div class="topup-price">$99</div>
+                  <div class="topup-rate">$0.12 / credit</div>
+                </div>
+              </div>
+              <button class="btn btn-primary" style="width: 100%; margin-top: 14px; height: 40px;">Buy 350 credits · $50</button>
+            </div>
+
+            <!-- Payment method -->
+            <div class="card">
+              <div class="card-head" style="margin-bottom: 12px;">
+                <div>
+                  <div class="card-title">Payment Method</div>
+                </div>
+                <button class="btn btn-ghost" style="height: 28px; padding: 0 10px; font-size: 12px;">Change</button>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface); border-radius: 10px;">
+                <div style="width: 40px; height: 28px; border-radius: 4px; background: linear-gradient(135deg, #1a1f4a, #0a0f2a); color: #fff; display: grid; place-items: center; font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em;">VISA</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 13px; font-weight: 700;">•••• •••• •••• 6411</div>
+                  <div style="font-size: 11.5px; color: var(--text-3); margin-top: 1px;">Expires 04/28</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('menuBtn');
+      var sidebar = document.getElementById('sidebar');
+      var backdrop = document.getElementById('sidebarBackdrop');
+      if (btn && sidebar) {
+        btn.addEventListener('click', function () { sidebar.classList.toggle('open'); backdrop.classList.toggle('open'); });
+        backdrop.addEventListener('click', function () { sidebar.classList.remove('open'); backdrop.classList.remove('open'); });
+      }
+      document.querySelectorAll('.chart-switch').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.chart-switch').forEach(function (e) { e.classList.remove('active'); });
+          el.classList.add('active');
+        });
+      });
+      document.querySelectorAll('.topup-card').forEach(function (el) {
+        el.addEventListener('click', function () {
+          document.querySelectorAll('.topup-card').forEach(function (e) { e.classList.remove('best'); });
+          el.classList.add('best');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VynixFlow | A month of content in an afternoon</title>
+  <meta name="description" content="Build one AI creator. Generate unlimited photos — bikini, lingerie, fitness, fashion, cosplay — same model, every scene. Instagram-safe. Fanvue-ready." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f7f8fa;
+      --surface-2: #f0f1f4;
+      --border: #e4e6eb;
+      --border-strong: #d0d3db;
+      --text: #0d0f14;
+      --text-2: #3d4350;
+      --text-3: #717789;
+      --neon: #3a7d2a;
+      --neon-dark: #2f6722;
+      --neon-pale: #f0f6ed;
+      --neon-mid: #dce9d7;
+      --neon-border: #bfd2b8;
+      --accent-warm: #c8541f;
+      --accent-warm-pale: #fdf1ea;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --t: 0.18s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: "Inter", sans-serif; font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+
+    /* NAV */
+    .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    .nav-inner { height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 8px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+    .brand-icon { width: 28px; height: 28px; border-radius: 7px; background: var(--neon); display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .nav-links { display: flex; gap: 24px; list-style: none; font-size: 13px; font-weight: 500; color: var(--text-2); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-actions { display: flex; gap: 8px; align-items: center; }
+    .nav-menu-btn { display: none; width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--bg); cursor: pointer; align-items: center; justify-content: center; padding: 0; }
+    .nav-menu-btn span { display: block; width: 18px; height: 1.5px; background: var(--text); position: relative; transition: transform var(--t), background var(--t); }
+    .nav-menu-btn span::before, .nav-menu-btn span::after { content: ""; position: absolute; left: 0; width: 18px; height: 1.5px; background: var(--text); transition: transform var(--t), top var(--t); }
+    .nav-menu-btn span::before { top: -6px; }
+    .nav-menu-btn span::after { top: 6px; }
+    .nav-menu-btn.open span { background: transparent; }
+    .nav-menu-btn.open span::before { top: 0; transform: rotate(45deg); }
+    .nav-menu-btn.open span::after { top: 0; transform: rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; inset: 60px 0 0 0; background: var(--bg); z-index: 45; padding: 24px; overflow-y: auto; }
+    .mobile-menu.open { display: block; }
+    .mobile-menu-links { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
+    .mobile-menu-links a { display: block; padding: 14px 4px; font-size: 16px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); }
+    .mobile-menu-cta { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .mobile-menu-cta .btn { height: 48px; font-size: 14px; }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background var(--t), box-shadow var(--t), transform var(--t); border: none; font-family: inherit; }
+    .btn-ghost { color: var(--text-2); background: transparent; }
+    .btn-ghost:hover { background: var(--surface); color: var(--text); }
+    .btn-outline { color: var(--text); background: var(--bg); border: 1px solid var(--border-strong); box-shadow: var(--shadow-sm); }
+    .btn-outline:hover { background: var(--surface); }
+    .btn-primary { color: #fff; background: var(--neon-dark); box-shadow: 0 1px 3px rgba(58,125,42,0.24); }
+    .btn-primary:hover { background: #28581d; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(58,125,42,0.28); }
+    .btn-lg { height: 44px; padding: 0 22px; font-size: 14px; border-radius: 10px; }
+    .btn-white { height: 42px; padding: 0 20px; border-radius: 9px; background: #fff; color: var(--text); font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; transition: opacity var(--t), transform var(--t); }
+    .btn-white:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-ghost-white { height: 42px; padding: 0 20px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.18); background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; transition: border-color var(--t), color var(--t); }
+    .btn-ghost-white:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+    /* HERO */
+    .hero { padding: 64px 0 40px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 420px; gap: 56px; align-items: center; }
+    .hero-label { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: var(--neon-mid); border: 1px solid var(--neon-border); color: var(--neon-dark); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; }
+    .hero-label::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--neon); }
+    .hero-title { font-family: "Bricolage Grotesque", sans-serif; font-size: 44px; line-height: 1.05; letter-spacing: -0.04em; color: var(--text); margin-bottom: 18px; }
+    .hero-title .hero-highlight { color: var(--neon-dark); font-style: italic; font-weight: 400; }
+    .hero-sub { font-size: 15px; line-height: 1.7; color: var(--text-2); max-width: 500px; margin-bottom: 28px; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+    .hero-microproof { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-3); flex-wrap: wrap; }
+    .hero-microproof-item { display: flex; align-items: center; gap: 6px; }
+    .hero-microproof-check { color: var(--neon-dark); font-weight: 700; }
+
+    /* HERO VISUAL — consistency grid placeholder */
+    .hero-visual { position: relative; }
+    .consistency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .consistency-tile { aspect-ratio: 3/4; border-radius: 14px; overflow: hidden; position: relative; background: var(--surface-2); border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .consistency-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .consistency-tile .tile-label { position: absolute; bottom: 8px; left: 8px; background: rgba(13,15,20,0.78); color: #fff; font-size: 10.5px; font-weight: 600; padding: 4px 8px; border-radius: 6px; backdrop-filter: blur(6px); }
+    .consistency-tile.placeholder { display: grid; place-items: center; color: var(--text-3); font-size: 11px; font-weight: 600; text-align: center; padding: 10px; }
+    .consistency-banner { position: absolute; top: -12px; right: -12px; background: var(--text); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 11px; border-radius: 999px; box-shadow: var(--shadow); transform: rotate(3deg); }
+
+    /* PLATFORM STRIP */
+    .platform-strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .platform-strip-inner { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; font-size: 12px; color: var(--text-3); }
+    .platform-strip-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-2); font-size: 11px; }
+    .platform-strip-items { display: flex; gap: 22px; flex-wrap: wrap; }
+    .platform-strip-item { font-weight: 600; color: var(--text-2); font-size: 13px; }
+    .platform-strip-item .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--neon); margin-right: 7px; vertical-align: middle; }
+
+    /* STATS */
+    .stats-bar { background: var(--bg); border-bottom: 1px solid var(--border); }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .stat-item { padding: 22px 22px; border-right: 1px solid var(--border); }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.04em; color: var(--text); line-height: 1; }
+    .stat-num .accent { color: var(--neon-dark); }
+    .stat-label { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+    /* SECTIONS */
+    .section { padding: 72px 0; }
+    hr.rule { border: none; border-top: 1px solid var(--border); }
+    .section-label { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--neon-dark); margin-bottom: 10px; }
+    .section-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; color: var(--text); line-height: 1.15; margin-bottom: 10px; }
+    .section-sub { font-size: 14.5px; color: var(--text-2); line-height: 1.65; max-width: 560px; }
+    .section-head { margin-bottom: 36px; }
+
+    /* SCENE RANGE STRIP */
+    .scene-range { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 26px 28px; }
+    .scene-range-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px; gap: 20px; flex-wrap: wrap; }
+    .scene-range-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+    .scene-range-note { font-size: 12px; color: var(--text-3); }
+    .scene-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .scene-tag { background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--text-2); display: inline-flex; align-items: center; gap: 6px; }
+    .scene-tag .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); }
+    .scene-tag.warm .sdot { background: var(--accent-warm); }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .feat-cell { background: var(--bg); padding: 26px; }
+    .feat-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--neon-pale); border: 1px solid var(--neon-border); display: grid; place-items: center; font-size: 16px; margin-bottom: 12px; }
+    .feat-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+    .feat-desc { font-size: 13px; color: var(--text-3); line-height: 1.6; }
+    .feat-meta { margin-top: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon-dark); }
+
+    /* MODEL BUILDER DEPTH */
+    .builder-showcase { background: var(--text); border-radius: var(--radius); padding: 36px; color: #fff; }
+    .builder-showcase-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 24px; flex-wrap: wrap; }
+    .builder-showcase-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; }
+    .builder-showcase-sub { font-size: 13px; color: rgba(255,255,255,0.6); max-width: 380px; line-height: 1.6; }
+    .builder-meta-pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 999px; padding: 6px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.85); flex-shrink: 0; }
+    .builder-attrs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
+    .builder-attr { background: #14171e; padding: 16px 18px; }
+    .builder-attr-count { font-family: "Plus Jakarta Sans", sans-serif; font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+    .builder-attr-count .plus { color: var(--neon); }
+    .builder-attr-label { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; font-weight: 500; }
+
+    /* HOW */
+    .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .step-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; transition: border-color var(--t), box-shadow var(--t); }
+    .step-card:hover { border-color: var(--neon-border); box-shadow: var(--shadow); }
+    .step-num { font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; color: var(--neon-dark); background: var(--neon-mid); border: 1px solid var(--neon-border); border-radius: 999px; padding: 3px 10px; display: inline-block; margin-bottom: 12px; }
+    .step-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: var(--text-3); line-height: 1.65; }
+    .step-visual { margin-top: 16px; aspect-ratio: 16/10; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); display: grid; place-items: center; color: var(--text-3); font-size: 11.5px; font-weight: 600; text-align: center; padding: 14px; overflow: hidden; }
+    .step-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .chip { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 12px; color: var(--text-2); font-weight: 500; }
+    .chip.active { background: var(--neon-mid); border-color: var(--neon-border); color: var(--neon-dark); font-weight: 600; }
+
+    /* IMPORT BAND */
+    .import-band { display: grid; grid-template-columns: 1fr 440px; gap: 44px; align-items: center; background: var(--accent-warm-pale); border: 1px solid #f1ddcb; border-radius: var(--radius); padding: 40px 44px; }
+    .import-label { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-warm); margin-bottom: 10px; }
+    .import-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 10px; }
+    .import-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 16px; }
+    .import-points { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-2); }
+    .import-points li { display: flex; gap: 10px; align-items: flex-start; }
+    .import-points li::before { content: "→"; color: var(--accent-warm); font-weight: 700; }
+    .import-visual { aspect-ratio: 4/3; border-radius: 12px; background: #fff; border: 1px dashed #ddbfa5; display: grid; place-items: center; text-align: center; padding: 20px; color: var(--text-3); font-size: 11.5px; font-weight: 600; }
+
+    /* PLATFORM-SAFE / STEALTH EQUIVALENT */
+    .stealth-band { background: var(--text); color: #fff; border-radius: var(--radius); padding: 44px; position: relative; overflow: hidden; }
+    .stealth-band::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(58,125,42,0.18), transparent 60%); pointer-events: none; }
+    .stealth-head { position: relative; max-width: 640px; margin-bottom: 28px; }
+    .stealth-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--neon); margin-bottom: 12px; }
+    .stealth-label::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--neon); }
+    .stealth-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 12px; }
+    .stealth-sub { font-size: 14.5px; color: rgba(255,255,255,0.7); line-height: 1.65; }
+    .stealth-grid { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .stealth-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 22px; }
+    .stealth-card-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: var(--neon); margin-bottom: 10px; }
+    .stealth-card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .stealth-card-desc { font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+    /* CONTENT MODES */
+    .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .mode-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform var(--t), box-shadow var(--t); }
+    .mode-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .mode-visual { aspect-ratio: 4/3; background: var(--surface-2); position: relative; overflow: hidden; }
+    .mode-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mode-body { padding: 20px 22px 24px; }
+    .mode-tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--neon-dark); margin-bottom: 8px; }
+    .mode-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .mode-desc { font-size: 13px; color: var(--text-3); line-height: 1.6; }
+
+    /* WHY */
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .why-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
+    .why-tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--neon-dark); background: var(--neon-mid); border: 1px solid var(--neon-border); border-radius: 999px; padding: 3px 10px; margin-bottom: 12px; }
+    .why-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; margin-bottom: 8px; }
+    .why-metric { font-family: "Plus Jakarta Sans", sans-serif; font-size: 26px; font-weight: 800; color: var(--neon-dark); letter-spacing: -0.04em; margin-bottom: 6px; line-height: 1; }
+    .why-desc { font-size: 13px; color: var(--text-3); line-height: 1.6; }
+
+    /* COMPARISON */
+    .compare-table { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .compare-head { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .compare-head > div { padding: 18px 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3); }
+    .compare-head > div.you { color: var(--neon-dark); background: var(--neon-pale); }
+    .compare-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; border-bottom: 1px solid var(--border); }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row > div { padding: 16px 20px; font-size: 13px; color: var(--text-2); display: flex; align-items: center; }
+    .compare-row > div.you { background: var(--neon-pale); color: var(--neon-dark); font-weight: 600; }
+    .compare-row > div.label { font-weight: 600; color: var(--text); }
+    .check-yes { color: var(--neon-dark); font-weight: 700; }
+    .check-no { color: var(--text-3); }
+
+    /* REVIEWS */
+    .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .review-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
+    .review-stars { color: var(--accent-warm); font-size: 13px; letter-spacing: 0.1em; margin-bottom: 12px; }
+    .review-text { font-size: 13.5px; color: var(--text); line-height: 1.65; margin-bottom: 16px; font-weight: 500; }
+    .review-meta { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .review-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--neon-mid), var(--neon-pale)); border: 1px solid var(--neon-border); display: grid; place-items: center; font-weight: 700; color: var(--neon-dark); font-size: 12px; flex-shrink: 0; }
+    .review-author { font-size: 13px; font-weight: 700; color: var(--text); }
+    .review-role { font-size: 11.5px; color: var(--text-3); margin-top: 1px; }
+
+    /* PRICING */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .plan { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; position: relative; }
+    .plan.featured { border-color: var(--neon-dark); box-shadow: 0 8px 28px rgba(58,125,42,0.12); }
+    .plan-tier { position: absolute; top: -11px; right: 22px; background: var(--neon-dark); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+    .plan:not(.featured) .plan-tier { background: var(--surface-2); color: var(--text-3); }
+    .plan-name { font-family: "Plus Jakarta Sans", sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; }
+    .plan-price { margin-bottom: 8px; }
+    .plan-price strong { font-family: "Plus Jakarta Sans", sans-serif; font-size: 34px; font-weight: 800; letter-spacing: -0.04em; color: var(--text); }
+    .plan-price span { font-size: 13px; color: var(--text-3); margin-left: 4px; }
+    .plan-volume { font-size: 13px; color: var(--neon-dark); font-weight: 600; margin-bottom: 14px; }
+    .plan-copy { font-size: 13px; color: var(--text-3); line-height: 1.6; margin-bottom: 18px; }
+    .plan-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; flex-grow: 1; }
+    .plan-list li { font-size: 13px; color: var(--text-2); display: flex; gap: 9px; align-items: flex-start; }
+    .plan-list li::before { content: "✓"; color: var(--neon-dark); font-weight: 700; flex-shrink: 0; }
+
+    .topup-band { margin-top: 26px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topup-band-text strong { font-weight: 800; }
+    .topup-options { display: flex; gap: 14px; font-size: 12.5px; color: var(--text-2); font-weight: 600; flex-wrap: wrap; }
+    .topup-option { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; }
+
+    /* FAQ */
+    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+    .faq-item { border-top: 1px solid var(--border); padding-top: 18px; }
+    .faq-q { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .faq-a { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+
+    /* CTA */
+    .cta-band { background: var(--text); color: #fff; border-radius: var(--radius); padding: 48px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; align-items: center; position: relative; overflow: hidden; }
+    .cta-band::before { content: ""; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(58,125,42,0.25), transparent 70%); pointer-events: none; }
+    .cta-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 10px; position: relative; }
+    .cta-sub { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; max-width: 440px; position: relative; }
+    .cta-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; position: relative; }
+
+    /* FOOTER */
+    .footer { padding: 40px 0; border-top: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--text-3); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ================================================
+       RESPONSIVE — TABLET (<= 900px)
+       ================================================ */
+    @media (max-width: 900px) {
+      .container { width: min(1120px, calc(100% - 32px)); }
+
+      /* NAV — switch to mobile menu */
+      .nav-links { display: none; }
+      .nav-actions .btn-ghost { display: none; }
+      .nav-menu-btn { display: flex; }
+
+      /* HERO */
+      .hero { padding: 40px 0 32px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+      .hero-title { font-size: 36px; line-height: 1.06; }
+      .hero-title br { display: none; }
+      .hero-sub { font-size: 15px; max-width: 100%; margin-bottom: 22px; }
+      .hero-actions { flex-direction: column; width: 100%; gap: 8px; }
+      .hero-actions .btn { width: 100%; height: 52px; font-size: 15px; }
+      .hero-microproof { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .consistency-banner { top: -8px; right: 8px; font-size: 10px; padding: 6px 10px; }
+
+      /* STATS */
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .stat-item { padding: 18px 16px; border-right: none; border-bottom: 1px solid var(--border); }
+      .stat-item:nth-child(odd) { border-right: 1px solid var(--border); }
+      .stat-item:nth-child(3), .stat-item:nth-child(4) { border-bottom: none; }
+      .stat-num { font-size: 20px; }
+      .stat-label { font-size: 11.5px; }
+
+      /* SECTION BASE */
+      .section { padding: 56px 0; }
+      .section-title { font-size: 26px; }
+      .section-sub { font-size: 14px; }
+      .section-head { margin-bottom: 28px; }
+
+      /* SCENE RANGE */
+      .scene-range { padding: 22px 20px; }
+      .scene-range-head { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 14px; }
+      .scene-range-title { font-size: 16px; }
+      .scene-tag { font-size: 12px; padding: 6px 12px; }
+
+      /* FEATURES */
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feat-cell { padding: 22px 20px; }
+
+      /* MODEL BUILDER */
+      .builder-showcase { padding: 28px 22px; }
+      .builder-showcase-head { flex-direction: column; gap: 14px; margin-bottom: 20px; }
+      .builder-showcase-title { font-size: 20px; }
+      .builder-showcase-sub { font-size: 13px; }
+      .builder-attrs { grid-template-columns: repeat(3, 1fr); }
+      .builder-attr { padding: 14px 14px; }
+      .builder-attr-count { font-size: 18px; }
+
+      /* HOW */
+      .how-grid { grid-template-columns: 1fr; gap: 14px; }
+      .step-card { padding: 22px 20px; }
+      .step-title { font-size: 16px; }
+
+      /* IMPORT BAND */
+      .import-band { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; }
+      .import-title { font-size: 22px; }
+
+      /* STEALTH */
+      .stealth-band { padding: 32px 26px; }
+      .stealth-title { font-size: 24px; }
+      .stealth-sub { font-size: 14px; }
+      .stealth-grid { grid-template-columns: 1fr; gap: 10px; }
+      .stealth-card { padding: 20px; }
+
+      /* MODES */
+      .modes-grid { grid-template-columns: 1fr; gap: 14px; }
+
+      /* WHY */
+      .why-grid { grid-template-columns: 1fr; gap: 14px; }
+      .why-card { padding: 24px 22px; }
+      .why-metric { font-size: 24px; }
+
+      /* COMPARISON — convert to stacked card layout */
+      .compare-table { border: none; background: transparent; box-shadow: none; }
+      .compare-head { display: none; }
+      .compare-row { grid-template-columns: 1fr; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: var(--bg); }
+      .compare-row > div { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+      .compare-row > div:last-child { border-bottom: none; }
+      .compare-row > div.label { background: var(--surface); font-weight: 700; color: var(--text); padding: 12px 16px; }
+      .compare-row > div.label::after { display: none; }
+      .compare-row > div:not(.label)::before { content: attr(data-label); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); font-weight: 600; }
+      .compare-row > div.you { background: var(--neon-pale); }
+      .compare-row > div.you::before { color: var(--neon-dark); }
+
+      /* REVIEWS */
+      .reviews-grid { grid-template-columns: 1fr; gap: 14px; }
+      .review-card { padding: 22px 20px; }
+
+      /* PRICING */
+      .pricing-grid { grid-template-columns: 1fr; gap: 14px; }
+      .plan { padding: 24px 22px; }
+      .plan-price strong { font-size: 30px; }
+      .topup-band { flex-direction: column; align-items: flex-start; padding: 18px 20px; }
+      .topup-options { width: 100%; }
+      .topup-option { flex: 1; min-width: 0; text-align: center; font-size: 11.5px; padding: 8px 6px; }
+
+      /* FAQ */
+      .faq-grid { grid-template-columns: 1fr; gap: 4px; }
+      .faq-item { padding: 18px 0 4px; }
+      .faq-q { font-size: 14px; }
+
+      /* CTA */
+      .cta-band { grid-template-columns: 1fr; padding: 32px 26px; gap: 20px; }
+      .cta-title { font-size: 24px; }
+      .cta-actions { justify-content: flex-start; }
+      .cta-actions a { flex: 1; text-align: center; }
+
+      /* FOOTER */
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .footer-links { gap: 16px 18px; }
+    }
+
+    /* ================================================
+       RESPONSIVE — MOBILE (<= 600px)
+       ================================================ */
+    @media (max-width: 600px) {
+      .container { width: min(1120px, calc(100% - 28px)); }
+      body { font-size: 14.5px; }
+
+      /* HERO */
+      .hero { padding: 32px 0 28px; }
+      .hero-title { font-size: 32px; letter-spacing: -0.035em; }
+      .hero-label { font-size: 10.5px; padding: 5px 10px; margin-bottom: 16px; }
+      .hero-grid { gap: 28px; }
+      .consistency-grid { gap: 8px; }
+      .consistency-tile .tile-label { font-size: 9.5px; padding: 3px 7px; }
+      .hero-actions .btn { height: 50px; }
+
+      /* PLATFORM STRIP — make it horizontally scrollable on mobile */
+      .platform-strip { padding: 14px 0; overflow: hidden; }
+      .platform-strip-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 0 14px; }
+      .platform-strip-label { padding-left: 14px; }
+      .platform-strip-items { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding: 0 14px 4px; gap: 14px; scrollbar-width: none; }
+      .platform-strip-items::-webkit-scrollbar { display: none; }
+      .platform-strip-item { white-space: nowrap; font-size: 12.5px; flex-shrink: 0; }
+
+      /* SECTION */
+      .section { padding: 48px 0; }
+      .section-title { font-size: 24px; line-height: 1.18; }
+      .section-sub { font-size: 13.5px; }
+      .section-label { font-size: 10.5px; }
+
+      /* STATS — 2x2 with tighter grid */
+      .stat-num { font-size: 18px; }
+      .stat-item { padding: 16px 14px; }
+
+      /* SCENE RANGE */
+      .scene-range { padding: 20px 18px; border-radius: 14px; }
+      .scene-tags { gap: 6px; }
+      .scene-tag { font-size: 11.5px; padding: 5px 10px; }
+
+      /* FEATURES — 1 col on small mobile */
+      .features-grid { grid-template-columns: 1fr; }
+      .feat-cell { padding: 20px 18px; }
+      .feat-title { font-size: 14.5px; }
+      .feat-desc { font-size: 13px; }
+
+      /* MODEL BUILDER — 2x6 on mobile */
+      .builder-showcase { padding: 24px 18px; border-radius: 14px; }
+      .builder-attrs { grid-template-columns: repeat(2, 1fr); }
+      .builder-attr { padding: 12px 12px; }
+      .builder-attr-count { font-size: 17px; }
+      .builder-attr-label { font-size: 10.5px; }
+
+      /* HOW */
+      .step-card { padding: 20px 18px; border-radius: 14px; }
+      .step-title { font-size: 15.5px; }
+      .step-desc { font-size: 13px; }
+      .step-visual { aspect-ratio: 16/11; }
+
+      /* IMPORT */
+      .import-band { padding: 28px 22px; border-radius: 14px; }
+      .import-title { font-size: 20px; }
+      .import-desc { font-size: 13.5px; }
+
+      /* STEALTH */
+      .stealth-band { padding: 28px 22px; border-radius: 14px; }
+      .stealth-title { font-size: 22px; }
+      .stealth-sub { font-size: 13.5px; }
+      .stealth-card { padding: 18px 16px; }
+
+      /* MODES */
+      .mode-body { padding: 18px 18px 22px; }
+      .mode-title { font-size: 16px; }
+
+      /* WHY */
+      .why-card { padding: 22px 18px; border-radius: 14px; }
+      .why-title { font-size: 15.5px; }
+      .why-metric { font-size: 22px; }
+      .why-desc { font-size: 13px; }
+
+      /* COMPARISON — further tighten */
+      .compare-row > div { padding: 11px 14px; font-size: 12.5px; }
+      .compare-row > div.label { padding: 11px 14px; font-size: 13px; }
+      .compare-row > div:not(.label)::before { font-size: 10.5px; }
+
+      /* REVIEWS */
+      .review-text { font-size: 13.5px; }
+      .review-avatar { width: 32px; height: 32px; font-size: 11px; }
+      .review-author { font-size: 12.5px; }
+      .review-role { font-size: 11px; }
+
+      /* PRICING */
+      .plan { padding: 22px 20px; border-radius: 14px; }
+      .plan-name { font-size: 18px; }
+      .plan-price strong { font-size: 28px; }
+      .plan-list li { font-size: 12.5px; }
+      .topup-options { flex-direction: column; gap: 8px; }
+      .topup-option { width: 100%; }
+
+      /* FAQ */
+      .faq-q { font-size: 13.5px; }
+      .faq-a { font-size: 13px; }
+
+      /* CTA */
+      .cta-band { padding: 28px 22px; border-radius: 14px; }
+      .cta-title { font-size: 22px; }
+      .cta-sub { font-size: 13.5px; }
+      .cta-actions { flex-direction: column; width: 100%; }
+      .cta-actions a { width: 100%; height: 48px; }
+
+      /* FOOTER */
+      .footer { padding: 32px 0; }
+      .footer-links { font-size: 12px; }
+    }
+
+    /* ================================================
+       RESPONSIVE — SMALL MOBILE (<= 380px)
+       ================================================ */
+    @media (max-width: 380px) {
+      .hero-title { font-size: 28px; }
+      .section-title { font-size: 22px; }
+      .stat-num { font-size: 17px; }
+      .builder-attr-count { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <span class="brand-icon">V</span>
+        VynixFlow
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#modes">Scenes</a></li>
+          <li><a href="#stealth">Platform-Safe</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="vynixflow-auth.html">Sign In</a>
+        <a class="btn btn-primary" href="vynixflow-auth.html">Start Free</a>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Open menu"><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul class="mobile-menu-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#modes">Scenes</a></li>
+      <li><a href="#stealth">Platform-Safe</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <div class="mobile-menu-cta">
+      <a class="btn btn-outline" href="vynixflow-auth.html">Sign In</a>
+      <a class="btn btn-primary" href="vynixflow-auth.html">Start Free</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-label">Instagram-safe · Fanvue-ready</div>
+            <h1 class="hero-title">
+              A month of content<br/>
+              in <span class="hero-highlight">an afternoon.</span>
+            </h1>
+            <p class="hero-sub">
+              Build one AI creator. Generate unlimited photos — bikini, lingerie, fitness, fashion, cosplay — same model, every single scene. Ready to post on Instagram, Fanvue, Fansly, and everywhere in between.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="vynixflow-auth.html">Build Your Model — Free</a>
+              <a class="btn btn-outline btn-lg" href="#how">See How It Works</a>
+            </div>
+            <div class="hero-microproof">
+              <div class="hero-microproof-item"><span class="hero-microproof-check">✓</span> 5 free generations, no card required</div>
+              <div class="hero-microproof-item"><span class="hero-microproof-check">✓</span> 30-second output</div>
+              <div class="hero-microproof-item"><span class="hero-microproof-check">✓</span> Cancel anytime</div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="consistency-banner">Same model · 6 scenes</div>
+            <div class="consistency-grid">
+              <div class="consistency-tile placeholder">
+                [Image: Instagram selfie]<br/><span style="font-weight:500;opacity:0.7;">swap with real output</span>
+                <div class="tile-label">Lifestyle</div>
+              </div>
+              <div class="consistency-tile placeholder">
+                [Image: Bikini beach]<br/><span style="font-weight:500;opacity:0.7;">swap with real output</span>
+                <div class="tile-label">Swim</div>
+              </div>
+              <div class="consistency-tile placeholder">
+                [Image: Gym fit]<br/><span style="font-weight:500;opacity:0.7;">swap with real output</span>
+                <div class="tile-label">Fitness</div>
+              </div>
+              <div class="consistency-tile placeholder">
+                [Image: Lingerie]<br/><span style="font-weight:500;opacity:0.7;">swap with real output</span>
+                <div class="tile-label">Boudoir</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM STRIP -->
+    <div class="platform-strip">
+      <div class="container">
+        <div class="platform-strip-inner">
+          <span class="platform-strip-label">Built for</span>
+          <div class="platform-strip-items">
+            <span class="platform-strip-item"><span class="dot"></span>Instagram</span>
+            <span class="platform-strip-item"><span class="dot"></span>TikTok</span>
+            <span class="platform-strip-item"><span class="dot"></span>Fanvue</span>
+            <span class="platform-strip-item"><span class="dot"></span>Fansly</span>
+            <span class="platform-strip-item"><span class="dot"></span>Passes</span>
+            <span class="platform-strip-item"><span class="dot"></span>LTK</span>
+            <span class="platform-strip-item"><span class="dot"></span>Patreon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="container">
+        <div class="stats-row">
+          <div class="stat-item"><div class="stat-num"><span class="accent">30s</span></div><div class="stat-label">From prompt to finished photo</div></div>
+          <div class="stat-item"><div class="stat-num">4K</div><div class="stat-label">Upscaled output quality</div></div>
+          <div class="stat-item"><div class="stat-num"><span class="accent">80+</span></div><div class="stat-label">Scene presets, 8 categories</div></div>
+          <div class="stat-item"><div class="stat-num">1 model</div><div class="stat-label">Every scene, locked forever</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE RANGE -->
+    <section class="section" style="padding-bottom: 36px;">
+      <div class="container">
+        <div class="scene-range">
+          <div class="scene-range-head">
+            <div>
+              <div class="scene-range-title">Every scene your content calendar needs.</div>
+              <div class="scene-range-note" style="margin-top: 6px;">Not NSFW. Not boring. Exactly the range creators actually post.</div>
+            </div>
+            <div class="scene-range-note">Same model. All scenes.</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag"><span class="sdot"></span>Lifestyle selfies</span>
+            <span class="scene-tag"><span class="sdot"></span>Fashion shoots</span>
+            <span class="scene-tag"><span class="sdot"></span>Fitness & gym</span>
+            <span class="scene-tag warm"><span class="sdot"></span>Bikini & swimwear</span>
+            <span class="scene-tag warm"><span class="sdot"></span>Lingerie & boudoir</span>
+            <span class="scene-tag warm"><span class="sdot"></span>Cosplay</span>
+            <span class="scene-tag"><span class="sdot"></span>Travel & outdoor</span>
+            <span class="scene-tag"><span class="sdot"></span>Night out</span>
+            <span class="scene-tag"><span class="sdot"></span>Coffee dates</span>
+            <span class="scene-tag"><span class="sdot"></span>Professional</span>
+            <span class="scene-tag"><span class="sdot"></span>Editorial</span>
+            <span class="scene-tag"><span class="sdot"></span>+ free prompts for anything else</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- FEATURES -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">The Platform</div>
+          <h2 class="section-title">Everything a daily poster needs.</h2>
+          <p class="section-sub">Built for creators who post 2–5 times a day across 3–5 platforms and have run out of new content to shoot.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feat-cell">
+            <div class="feat-icon">🧬</div>
+            <div class="feat-title">Deep AI Model Builder</div>
+            <div class="feat-desc">Lock in 10+ attributes — face, hair, eyes, body, skin, style — and reuse the same creator across hundreds of generations.</div>
+            <div class="feat-meta">10+ attributes · Unlimited re-rolls</div>
+          </div>
+          <div class="feat-cell">
+            <div class="feat-icon">📸</div>
+            <div class="feat-title">80+ Scene Presets</div>
+            <div class="feat-desc">Type a prompt or pick a preset. Lifestyle, swim, lingerie, gym, cosplay — tuned for the feed and ready in under 30s.</div>
+            <div class="feat-meta">8 categories · 1 click</div>
+          </div>
+          <div class="feat-cell">
+            <div class="feat-icon">📤</div>
+            <div class="feat-title">Import Your Own Model</div>
+            <div class="feat-desc">Already have a creator or reference photos? Upload them, lock the likeness, and keep generating — no rebuild needed.</div>
+            <div class="feat-meta">1-photo import</div>
+          </div>
+          <div class="feat-cell">
+            <div class="feat-icon">🎬</div>
+            <div class="feat-title">Photo-to-Video</div>
+            <div class="feat-desc">Animate any still into a short clip for Reels, Stories, TikTok, or Fanvue PPV. Same model, fluid motion.</div>
+            <div class="feat-meta">Reels · Stories · PPV</div>
+          </div>
+          <div class="feat-cell">
+            <div class="feat-icon">🛡</div>
+            <div class="feat-title">Platform-Safe Output</div>
+            <div class="feat-desc">AI fingerprints stripped, metadata cleaned, encoded like native phone footage. Your content lands where it's supposed to.</div>
+            <div class="feat-meta">Auto on every export</div>
+          </div>
+          <div class="feat-cell">
+            <div class="feat-icon">⚡</div>
+            <div class="feat-title">4K Upscale & Batch</div>
+            <div class="feat-desc">Export at 4K, batch-generate full posting weeks in minutes, download in the right aspect ratio for every platform.</div>
+            <div class="feat-meta">9:16 · 1:1 · 4:5 · 16:9</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- MODEL BUILDER DEPTH -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Step 01 · Build your model</div>
+          <h2 class="section-title">Build a creator who looks exactly how you want.</h2>
+          <p class="section-sub">Every attribute dialed in. Every regeneration consistent. Your model stays the same person across every photo and video you ever make.</p>
+        </div>
+        <div class="builder-showcase">
+          <div class="builder-showcase-head">
+            <div>
+              <div class="builder-showcase-title">11 categories. Hundreds of combinations.</div>
+              <div class="builder-showcase-sub">Pick from structured options, or write your own. Regenerate until you get the exact look you want — no limits.</div>
+            </div>
+            <div class="builder-meta-pill">Custom input on every field</div>
+          </div>
+          <div class="builder-attrs">
+            <div class="builder-attr"><div class="builder-attr-count">10</div><div class="builder-attr-label">Age ranges</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">7<span class="plus">+</span></div><div class="builder-attr-label">Ethnicities</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">6<span class="plus">+</span></div><div class="builder-attr-label">Body types</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">8<span class="plus">+</span></div><div class="builder-attr-label">Skin tones</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">14<span class="plus">+</span></div><div class="builder-attr-label">Hair colors</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">5<span class="plus">+</span></div><div class="builder-attr-label">Hair lengths</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">4<span class="plus">+</span></div><div class="builder-attr-label">Hair textures</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">8<span class="plus">+</span></div><div class="builder-attr-label">Eye colors</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">5<span class="plus">+</span></div><div class="builder-attr-label">Face styles</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">19<span class="plus">+</span></div><div class="builder-attr-label">Occupations</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">19<span class="plus">+</span></div><div class="builder-attr-label">Hobbies & niches</div></div>
+            <div class="builder-attr"><div class="builder-attr-count">∞</div><div class="builder-attr-label">Regenerations</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">How It Works</div>
+          <h2 class="section-title">Four steps. One content machine.</h2>
+          <p class="section-sub">Build the model, generate the scenes, batch a full week, export platform-ready files. Then do it again tomorrow with zero setup.</p>
+        </div>
+        <div class="how-grid">
+          <div class="step-card">
+            <div class="step-num">Step 02</div>
+            <div class="step-title">Pick a scene. Or prompt your own.</div>
+            <p class="step-desc">80+ ready-made presets across lifestyle, swim, lingerie, gym, cosplay, and more. Or write a free prompt for any scene you can describe.</p>
+            <div class="chip-row">
+              <span class="chip active">Instagram Selfie</span>
+              <span class="chip active">Beach Day</span>
+              <span class="chip active">Gym Set</span>
+              <span class="chip">Lingerie</span>
+              <span class="chip">Cosplay</span>
+              <span class="chip">Night Out</span>
+            </div>
+            <div class="step-visual">[Image: 4-tile preview of selected preset outputs]</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 03</div>
+            <div class="step-title">Batch a full week in minutes.</div>
+            <p class="step-desc">Queue 20–50 generations at once. Same model, different scenes, different outfits, different moods. Walk away, come back, post all week.</p>
+            <div class="chip-row">
+              <span class="chip active">Lifestyle</span>
+              <span class="chip active">Swim</span>
+              <span class="chip active">Fitness</span>
+              <span class="chip active">Boudoir</span>
+              <span class="chip active">Cosplay</span>
+              <span class="chip">Travel</span>
+            </div>
+            <div class="step-visual">[Image: batch output grid showing variety]</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 04</div>
+            <div class="step-title">Animate to video.</div>
+            <p class="step-desc">Turn any still into a short clip. Perfect for Reels, Stories, TikTok, and Fanvue PPV drops. Same model, fluid motion, ready to post.</p>
+            <div class="step-visual">[Image/video: animated clip preview]</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 05</div>
+            <div class="step-title">Export platform-safe.</div>
+            <p class="step-desc">Every file cleaned of AI fingerprints, encoded natively, sized for every platform. Download and schedule. Repeat tomorrow.</p>
+            <div class="chip-row">
+              <span class="chip active">9:16 Reels</span>
+              <span class="chip active">1:1 Feed</span>
+              <span class="chip active">4:5 Carousel</span>
+              <span class="chip active">16:9 YT</span>
+            </div>
+            <div class="step-visual">[Image: export dialog with platform options]</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- IMPORT BAND -->
+    <section class="section">
+      <div class="container">
+        <div class="import-band">
+          <div>
+            <div class="import-label">Already have a model?</div>
+            <h2 class="import-title">Import your creator. Keep going.</h2>
+            <p class="import-desc">Already built a model on another tool, or have a real creator you want to generate content for? Upload a reference photo, lock the likeness, and every generation after that is the same person.</p>
+            <ul class="import-points">
+              <li>One reference photo locks the face and features</li>
+              <li>Works with every preset, scene, and video feature</li>
+              <li>Your uploads stay private — never used for training, never shared</li>
+            </ul>
+          </div>
+          <div class="import-visual">[Image: before/after — reference photo → locked model preview]</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- PLATFORM-SAFE / STEALTH -->
+    <section class="section" id="stealth">
+      <div class="container">
+        <div class="stealth-band">
+          <div class="stealth-head">
+            <div class="stealth-label">Platform-Safe Delivery</div>
+            <h2 class="stealth-title">AI-generated. Posts like a phone photo.</h2>
+            <p class="stealth-sub">Every AI tool embeds invisible fingerprints — watermark data, encoder signatures, metadata flags — that Instagram, TikTok, and Meta use to quietly kill reach on AI content. We clean all of it, automatically, on every export.</p>
+          </div>
+          <div class="stealth-grid">
+            <div class="stealth-card">
+              <div class="stealth-card-num">01</div>
+              <div class="stealth-card-title">Fingerprint strip</div>
+              <div class="stealth-card-desc">Every frame re-rendered through native-grade encoding. Embedded AI watermark patterns destroyed. Output reads like camera footage.</div>
+            </div>
+            <div class="stealth-card">
+              <div class="stealth-card-num">02</div>
+              <div class="stealth-card-title">Metadata scrub</div>
+              <div class="stealth-card-desc">Encoder signatures, generator tags, software identifiers — all stripped. No trace of AI origin remains in the file.</div>
+            </div>
+            <div class="stealth-card">
+              <div class="stealth-card-num">03</div>
+              <div class="stealth-card-title">Native device profile</div>
+              <div class="stealth-card-desc">Authentic device metadata injected — phone model, OS, timestamps — so platforms classify your content as natively captured.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- CONTENT MODES -->
+    <section class="section" id="modes">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Your Content Funnel</div>
+          <h2 class="section-title">One model. Every tier of your content stack.</h2>
+          <p class="section-sub">Daily feed content for reach, spicier drops for paid platforms, video for engagement — all from the same creator, same look, same voice.</p>
+        </div>
+        <div class="modes-grid">
+          <div class="mode-card">
+            <div class="mode-visual" style="background: linear-gradient(145deg, #dce9d7, #f0f6ed);">
+              <div style="padding: 20px; color: var(--neon-dark); font-weight: 600; font-size: 12px;">[Image: lifestyle + fashion feed grid]</div>
+            </div>
+            <div class="mode-body">
+              <div class="mode-tag">Daily Feed</div>
+              <div class="mode-title">Instagram · TikTok</div>
+              <p class="mode-desc">Lifestyle selfies, OOTD, gym sets, coffee dates, travel. Built to post 2–3 times a day and keep the algorithm fed.</p>
+            </div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-visual" style="background: linear-gradient(145deg, #fce7c7, #fff5df);">
+              <div style="padding: 20px; color: var(--accent-warm); font-weight: 600; font-size: 12px;">[Image: swim + lingerie + cosplay grid]</div>
+            </div>
+            <div class="mode-body">
+              <div class="mode-tag">Spicy Drops</div>
+              <div class="mode-title">Fanvue · Fansly · Passes</div>
+              <p class="mode-desc">Bikini, lingerie, boudoir, cosplay. The content your paid subscribers signed up for, batched and ready to drip.</p>
+            </div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-visual" style="background: linear-gradient(145deg, #e3e8f6, #f4f6fb);">
+              <div style="padding: 20px; color: #3a4a6b; font-weight: 600; font-size: 12px;">[Image: animated video thumbnails]</div>
+            </div>
+            <div class="mode-body">
+              <div class="mode-tag">Video</div>
+              <div class="mode-title">Reels · Stories · PPV</div>
+              <p class="mode-desc">Turn any still into a short clip. Drive engagement on Reels and Stories, monetize with personalized PPV drops.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- WHY -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Why Creators Switch</div>
+          <h2 class="section-title">Stop running out of content.</h2>
+          <p class="section-sub">If you've ever spent a full Sunday shooting content just to post it all by Thursday — this is the fix.</p>
+        </div>
+        <div class="why-grid">
+          <div class="why-card">
+            <div class="why-tag">Faster</div>
+            <div class="why-metric">10 min</div>
+            <div class="why-title">A full week of posts, batched in one sitting.</div>
+            <p class="why-desc">No location scouting. No outfit changes. No editor. Queue 40 generations, walk away, come back to a week of content.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-tag">Cheaper</div>
+            <div class="why-metric">~$1</div>
+            <div class="why-title">Cost per finished, post-ready photo.</div>
+            <p class="why-desc">A traditional shoot runs $500–$2,000. Photographer, location, outfits, editor. Your last batch cost you about the price of a coffee.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-tag">Consistent</div>
+            <div class="why-metric">1 model</div>
+            <div class="why-title">Same creator. Forever. Every scene.</div>
+            <p class="why-desc">Your audience recognizes the same face across hundreds of posts. Consistency builds recognition. Recognition builds subs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- COMPARISON -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">How We Compare</div>
+          <h2 class="section-title">The tool for the range you actually post.</h2>
+          <p class="section-sub">Most AI tools pick a corner — either too tame for spicy drops or too explicit for mainstream platforms. VynixFlow sits exactly where creators need it.</p>
+        </div>
+        <div class="compare-table">
+          <div class="compare-head">
+            <div>Feature</div>
+            <div class="you">VynixFlow</div>
+            <div>Generic AI tools</div>
+            <div>NSFW AI tools</div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Instagram-safe lifestyle content</div>
+            <div class="you" data-label="VynixFlow"><span class="check-yes">✓</span></div>
+            <div data-label="Generic AI"><span class="check-yes">✓</span></div>
+            <div data-label="NSFW AI"><span class="check-no">Risky branding</span></div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Bikini & swimwear</div>
+            <div class="you" data-label="VynixFlow"><span class="check-yes">✓</span></div>
+            <div data-label="Generic AI"><span class="check-no">Blocked</span></div>
+            <div data-label="NSFW AI"><span class="check-yes">✓</span></div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Lingerie & boudoir</div>
+            <div class="you" data-label="VynixFlow"><span class="check-yes">✓</span></div>
+            <div data-label="Generic AI"><span class="check-no">Blocked</span></div>
+            <div data-label="NSFW AI"><span class="check-yes">✓</span></div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Cosplay (including spicy)</div>
+            <div class="you" data-label="VynixFlow"><span class="check-yes">✓</span></div>
+            <div data-label="Generic AI"><span class="check-no">Limited</span></div>
+            <div data-label="NSFW AI"><span class="check-yes">✓</span></div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Explicit / nude content</div>
+            <div class="you" data-label="VynixFlow"><span class="check-no">✗ By design</span></div>
+            <div data-label="Generic AI"><span class="check-no">✗</span></div>
+            <div data-label="NSFW AI"><span class="check-yes">✓</span></div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Platform-safe metadata export</div>
+            <div class="you" data-label="VynixFlow"><span class="check-yes">✓</span></div>
+            <div data-label="Generic AI"><span class="check-no">✗</span></div>
+            <div data-label="NSFW AI"><span class="check-no">Inconsistent</span></div>
+          </div>
+          <div class="compare-row">
+            <div class="label">Stripe-friendly payments</div>
+            <div class="you" data-label="VynixFlow"><span class="check-yes">✓</span></div>
+            <div data-label="Generic AI"><span class="check-yes">✓</span></div>
+            <div data-label="NSFW AI"><span class="check-no">Often flagged</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- REVIEWS -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">What Creators Say</div>
+          <h2 class="section-title">Built with creators, tested by creators.</h2>
+        </div>
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"I used to spend every Sunday shooting. Now I batch a month of posts in one afternoon and my Fanvue drops are cleaner than my real shoots ever were."</p>
+            <div class="review-meta">
+              <div class="review-avatar">JM</div>
+              <div>
+                <div class="review-author">Jessica M.</div>
+                <div class="review-role">Solo creator · 42K IG · Fanvue</div>
+              </div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"The model consistency is what sold me. Same face across 200 photos, different scenes, and my subs can't tell. Replaced my whole production flow."</p>
+            <div class="review-meta">
+              <div class="review-avatar">SL</div>
+              <div>
+                <div class="review-author">Sophie L.</div>
+                <div class="review-role">Content creator · 120K followers</div>
+              </div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"I run four creator accounts. This is the first AI tool that handles the full range I need — from feed content to spicier drops — without bouncing between three subscriptions."</p>
+            <div class="review-meta">
+              <div class="review-avatar">MD</div>
+              <div>
+                <div class="review-author">Marcus D.</div>
+                <div class="review-role">Creator manager · 4 accounts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- PRICING -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Pricing</div>
+          <h2 class="section-title">Start free. Scale when you're ready.</h2>
+          <p class="section-sub">5 free generations on signup — no credit card. Pick a plan when you're ready, top up with credit packs anytime.</p>
+        </div>
+        <div class="pricing-grid">
+          <div class="plan">
+            <span class="plan-tier">Starter</span>
+            <div class="plan-name">Basic</div>
+            <div class="plan-price"><strong>$19</strong><span>/ month</span></div>
+            <div class="plan-volume">100 generations · ~100 photos</div>
+            <p class="plan-copy">For creators testing the flow or running one account.</p>
+            <ul class="plan-list">
+              <li>Full AI model builder</li>
+              <li>All 80+ scene presets</li>
+              <li>Free prompts</li>
+              <li>4K upscale</li>
+              <li>Platform-safe export</li>
+            </ul>
+            <a class="btn btn-outline" href="vynixflow-auth.html" style="justify-content:center;">Get Started</a>
+          </div>
+          <div class="plan featured">
+            <span class="plan-tier">Best Value</span>
+            <div class="plan-name">Pro</div>
+            <div class="plan-price"><strong>$49</strong><span>/ month</span></div>
+            <div class="plan-volume">300 generations · ~300 photos</div>
+            <p class="plan-copy">For creators posting daily across Instagram, Fanvue, and Fansly.</p>
+            <ul class="plan-list">
+              <li>Everything in Basic</li>
+              <li>Photo-to-video animation</li>
+              <li>Import your own model</li>
+              <li>Batch generation (queue 50 at once)</li>
+              <li>Priority queue</li>
+            </ul>
+            <a class="btn btn-primary" href="vynixflow-auth.html" style="justify-content:center;">Get Pro</a>
+          </div>
+          <div class="plan">
+            <span class="plan-tier">Unlimited</span>
+            <div class="plan-name">Unlimited</div>
+            <div class="plan-price"><strong>$99</strong><span>/ month</span></div>
+            <div class="plan-volume">1,000 generations · effectively unlimited</div>
+            <p class="plan-copy">For power users and creators running multiple models.</p>
+            <ul class="plan-list">
+              <li>Everything in Pro</li>
+              <li>1,000 generations / month</li>
+              <li>Maximum priority queue</li>
+              <li>Early access to new features</li>
+              <li>Direct support</li>
+            </ul>
+            <a class="btn btn-outline" href="vynixflow-auth.html" style="justify-content:center;">Go Unlimited</a>
+          </div>
+        </div>
+
+        <div class="topup-band">
+          <div class="topup-band-text">
+            <strong>Need more credits?</strong> Top-up anytime. One-time purchase, no expiration, stacks on any plan.
+          </div>
+          <div class="topup-options">
+            <span class="topup-option">50 credits · $10</span>
+            <span class="topup-option">150 credits · $25</span>
+            <span class="topup-option">350 credits · $50</span>
+            <span class="topup-option">800 credits · $99</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">FAQ</div>
+          <h2 class="section-title">Questions creators actually ask.</h2>
+        </div>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-q">Will Instagram flag or down-rank AI content from VynixFlow?</div>
+            <p class="faq-a">No. Every export is cleaned of AI fingerprints, metadata signatures, and encoder flags. The files read like native phone photos and videos to platform algorithms.</p>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">What exactly can I generate? What can't I?</div>
+            <p class="faq-a">You can generate lifestyle, fashion, fitness, swimwear, lingerie, boudoir, cosplay — the full range most creators actually post. We don't generate explicit nudity or fully NSFW content, by design.</p>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Is the model unique to me? Will other users get the same creator?</div>
+            <p class="faq-a">Every model is unique to your account. Locked seeds mean the same creator stays exclusively yours — nobody else can generate her.</p>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Do you train on my uploads or outputs?</div>
+            <p class="faq-a">Never. Your reference photos, models, and generated content stay private to your account. No training, no sharing, no public gallery.</p>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Can I import a creator or real person I already have photos of?</div>
+            <p class="faq-a">Yes — if it's you, or someone who has clearly consented. Upload a reference photo to lock the likeness. We require that you have full rights to any person you import.</p>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Is this Stripe-safe? Will my payments get flagged?</div>
+            <p class="faq-a">Yes. Because we stay in suggestive-SFW territory and don't do explicit content, we use standard Stripe payment rails. No processor surprises.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <h2 class="cta-title">Build your creator tonight. Post all week starting tomorrow.</h2>
+            <p class="cta-sub">5 free generations on signup. No card. See the same-model magic for yourself, then scale when you're ready.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn-white" href="vynixflow-auth.html">Start Free</a>
+            <a class="btn-ghost-white" href="#how">How It Works</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© 2026 VynixFlow. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#how">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#stealth">Platform-Safe</a>
+        <a href="support.html">Support</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="content-policy.html">Content Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('navMenuBtn');
+      var menu = document.getElementById('mobileMenu');
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', function () {
+        var isOpen = menu.classList.toggle('open');
+        btn.classList.toggle('open', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+
+      // Close menu when a link is tapped
+      menu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          menu.classList.remove('open');
+          btn.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
