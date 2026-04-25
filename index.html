@@ -74,7 +74,7 @@
     .btn-primary:hover { background: linear-gradient(180deg, #3f8a2d 0%, #28581d 100%); transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.08), 0 8px 18px rgba(58,125,42,0.32); }
     .btn-primary .btn-arrow { font-size: 14px; line-height: 1; transition: transform var(--t); margin-left: -1px; }
     .btn-primary:hover .btn-arrow { transform: translateX(2px); }
-    .btn-lg { height: 46px; padding: 0 24px; font-size: 14px; }
+    .btn-lg { height: 42px; padding: 0 20px; font-size: 13.5px; }
     .btn-white { height: 44px; padding: 0 22px; border-radius: 999px; background: #fff; color: var(--text); font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 7px; transition: opacity var(--t), transform var(--t), box-shadow var(--t); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
     .btn-white:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.24); }
     .btn-ghost-white { height: 44px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.22); background: transparent; color: rgba(255,255,255,0.85); font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; transition: border-color var(--t), color var(--t), background var(--t); }
@@ -106,11 +106,11 @@
     .consistency-banner { position: absolute; top: -10px; right: -8px; background: var(--text); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 12px; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,0.2); transform: rotate(3deg); z-index: 2; }
 
     /* PLATFORM STRIP */
-    .platform-strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .platform-strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 16px 0; }
     .platform-strip-inner { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; font-size: 12px; color: var(--text-3); }
-    .platform-strip-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-2); font-size: 11px; }
+    .platform-strip-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); font-size: 10.5px; }
     .platform-strip-items { display: flex; gap: 22px; flex-wrap: wrap; }
-    .platform-strip-item { font-weight: 600; color: var(--text-2); font-size: 13px; }
+    .platform-strip-item { font-weight: 600; color: var(--text-2); font-size: 13px; opacity: 0.8; }
     .platform-strip-item .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--neon); margin-right: 7px; vertical-align: middle; }
 
     /* STATS */
@@ -123,7 +123,7 @@
     .stat-label { font-size: 12px; color: var(--text-3); margin-top: 8px; letter-spacing: 0.01em; }
 
     /* SECTIONS */
-    .section { padding: 96px 0; }
+    .section { padding: 80px 0; }
     hr.rule { border: none; border-top: 1px solid var(--border); }
     .section-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--neon-dark); background: var(--neon-pale); border: 1px solid var(--neon-border); padding: 5px 11px; border-radius: 999px; margin-bottom: 14px; }
     .section-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -0.04em; color: var(--text); line-height: 1.1; margin-bottom: 12px; }
@@ -179,9 +179,9 @@
 
     /* HOW */
     .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .step-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; transition: border-color var(--t), box-shadow var(--t); }
-    .step-card:hover { border-color: var(--neon-border); box-shadow: var(--shadow); }
-    .step-num { font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; color: var(--text-3); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; display: inline-block; margin-bottom: 12px; }
+    .step-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; transition: border-color var(--t), box-shadow var(--t), transform var(--t); }
+    .step-card:hover { border-color: var(--neon-border); box-shadow: 0 12px 32px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.03); transform: translateY(-2px); }
+    .step-num { font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; color: var(--neon-dark); background: var(--neon-pale); border: 1px solid var(--neon-border); border-radius: 999px; padding: 3px 10px; display: inline-block; margin-bottom: 12px; }
     .step-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
     .step-desc { font-size: 13px; color: var(--text-3); line-height: 1.65; }
     .step-visual { margin-top: 16px; aspect-ratio: 16/10; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); display: grid; place-items: center; color: var(--text-3); font-size: 11.5px; font-weight: 600; text-align: center; padding: 0; overflow: hidden; }
@@ -202,18 +202,29 @@
     .import-visual { aspect-ratio: 4/3; border-radius: 12px; background: #fff; border: 1px dashed #ddbfa5; display: grid; place-items: center; text-align: center; padding: 20px; color: var(--text-3); font-size: 11.5px; font-weight: 600; }
 
     /* PLATFORM-SAFE / STEALTH EQUIVALENT */
-    .stealth-band { background: var(--text); color: #fff; border-radius: var(--radius); padding: 44px; position: relative; overflow: hidden; }
-    .stealth-band::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(58,125,42,0.18), transparent 60%); pointer-events: none; }
-    .stealth-head { position: relative; max-width: 640px; margin-bottom: 28px; }
-    .stealth-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 12px; }
-    .stealth-label::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); }
-    .stealth-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 12px; }
-    .stealth-sub { font-size: 14.5px; color: rgba(255,255,255,0.7); line-height: 1.65; }
-    .stealth-grid { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .stealth-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 22px; }
-    .stealth-card-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
-    .stealth-card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #fff; }
-    .stealth-card-desc { font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+    .stealth-band { background: linear-gradient(160deg, #11141b 0%, var(--text) 60%, #0a0c10 100%); color: #fff; border-radius: 24px; padding: 36px; position: relative; overflow: hidden; box-shadow: 0 24px 60px rgba(13,15,20,0.18); }
+    .stealth-band::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 22px 22px; opacity: 0.6; pointer-events: none; mask-image: radial-gradient(ellipse at top left, #000 30%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse at top left, #000 30%, transparent 70%); }
+    .stealth-band::after { content: ""; position: absolute; top: -30%; right: -10%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(74,147,55,0.22), transparent 65%); pointer-events: none; }
+    .stealth-layout { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 36px; align-items: center; z-index: 1; }
+    .stealth-head { max-width: 460px; }
+    .stealth-label { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 16px; }
+    .stealth-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 0 3px rgba(58,125,42,0.25); }
+    .stealth-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; margin-bottom: 14px; }
+    .stealth-sub { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 22px; }
+    .stealth-proof { display: flex; gap: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .stealth-proof-item { flex: 1; }
+    .stealth-proof-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; color: #fff; line-height: 1; }
+    .stealth-proof-num .pct { color: var(--neon); }
+    .stealth-proof-label { font-size: 11.5px; color: rgba(255,255,255,0.5); margin-top: 5px; line-height: 1.4; }
+    .stealth-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .stealth-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 18px; display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: flex-start; transition: background var(--t), border-color var(--t), transform var(--t); }
+    .stealth-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); transform: translateX(2px); }
+    .stealth-card-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, rgba(74,147,55,0.18), rgba(74,147,55,0.06)); border: 1px solid rgba(74,147,55,0.2); display: grid; place-items: center; color: var(--neon); flex-shrink: 0; }
+    .stealth-card-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .stealth-card-body { min-width: 0; }
+    .stealth-card-title { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; color: #fff; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+    .stealth-card-title .stealth-card-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); margin-bottom: 0; }
+    .stealth-card-desc { font-size: 12.5px; color: rgba(255,255,255,0.6); line-height: 1.55; }
 
     /* CONTENT MODES */
     .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -317,9 +328,9 @@
       .hero-title { font-size: 38px; line-height: 1.05; }
       .hero-title br { display: none; }
       .hero-sub { font-size: 15px; max-width: 100%; margin-bottom: 24px; }
-      .hero-actions { flex-direction: row; width: 100%; gap: 12px; align-items: center; flex-wrap: wrap; }
-      .hero-actions .btn-primary.btn-lg { width: auto; min-width: 220px; height: 48px; font-size: 14px; padding: 0 26px; }
-      .hero-actions .btn-outline.btn-lg { background: transparent; border: none; box-shadow: none; color: var(--text-2); font-size: 13px; height: 48px; padding: 0 4px; font-weight: 600; }
+      .hero-actions { flex-direction: row; width: 100%; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .hero-actions .btn-primary.btn-lg { width: auto; min-width: 0; height: 44px; font-size: 13.5px; padding: 0 22px; }
+      .hero-actions .btn-outline.btn-lg { background: transparent; border: none; box-shadow: none; color: var(--text-2); font-size: 13px; height: 44px; padding: 0 6px; font-weight: 600; }
       .hero-actions .btn-outline.btn-lg:hover { color: var(--text); background: transparent; }
       .hero-microproof { flex-direction: row; align-items: center; gap: 4px 6px; flex-wrap: wrap; font-size: 12px; }
       .consistency-banner { top: -10px; right: 8px; font-size: 10px; padding: 6px 10px; z-index: 9; }
@@ -368,11 +379,14 @@
       .import-title { font-size: 22px; }
 
       /* STEALTH */
-      .stealth-band { padding: 32px 26px; }
+      .stealth-band { padding: 28px 24px; border-radius: 20px; }
+      .stealth-layout { grid-template-columns: 1fr; gap: 24px; }
+      .stealth-head { max-width: 100%; }
       .stealth-title { font-size: 24px; }
-      .stealth-sub { font-size: 14px; }
-      .stealth-grid { grid-template-columns: 1fr; gap: 10px; }
-      .stealth-card { padding: 20px; }
+      .stealth-sub { font-size: 13.5px; margin-bottom: 18px; }
+      .stealth-proof { gap: 18px; padding-top: 16px; }
+      .stealth-proof-num { font-size: 20px; }
+      .stealth-card { padding: 14px 16px; }
 
       /* MODES */
       .modes-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -435,9 +449,9 @@
       .hero-label { display: inline-flex; font-size: 10px; padding: 5px 10px; margin-bottom: 16px; }
       .hero-sub { font-size: 14px; line-height: 1.6; margin-bottom: 22px; }
       .hero-grid { gap: 28px; }
-      .hero-actions { margin-bottom: 16px; gap: 8px; }
-      .hero-actions .btn-primary.btn-lg { width: 100%; min-width: 0; height: 50px; font-size: 14.5px; border-radius: 999px; }
-      .hero-actions .btn-outline.btn-lg { width: 100%; height: 42px; font-size: 13px; color: var(--text-2); justify-content: center; }
+      .hero-actions { margin-bottom: 14px; gap: 4px; flex-direction: column; align-items: stretch; }
+      .hero-actions .btn-primary.btn-lg { width: 100%; min-width: 0; height: 44px; font-size: 13.5px; border-radius: 999px; padding: 0 20px; }
+      .hero-actions .btn-outline.btn-lg { width: 100%; height: 36px; font-size: 12.5px; color: var(--text-3); justify-content: center; padding: 0; font-weight: 500; }
       .hero-microproof { font-size: 11.5px; gap: 4px 10px; justify-content: flex-start; }
       .consistency-grid { gap: 8px; }
       .consistency-tile { border-radius: 14px; box-shadow: 0 8px 22px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04); }
@@ -488,13 +502,18 @@
       .step-visual { aspect-ratio: 16/10; }
 
       /* STEALTH */
-      .stealth-band { padding: 24px 18px; border-radius: 14px; }
-      .stealth-title { font-size: 20px; }
-      .stealth-sub { display: none; }
-      .stealth-card-desc { display: none; }
-      .stealth-card { padding: 14px 14px; }
-      .stealth-sub { font-size: 13.5px; }
-      .stealth-card { padding: 18px 16px; }
+      .stealth-band { padding: 22px 18px; border-radius: 18px; }
+      .stealth-layout { gap: 20px; }
+      .stealth-title { font-size: 22px; }
+      .stealth-sub { font-size: 13px; margin-bottom: 16px; }
+      .stealth-proof { gap: 16px; padding-top: 14px; }
+      .stealth-proof-num { font-size: 18px; }
+      .stealth-proof-label { font-size: 11px; }
+      .stealth-card { padding: 13px 14px; gap: 12px; grid-template-columns: 32px 1fr; }
+      .stealth-card-icon { width: 32px; height: 32px; border-radius: 9px; }
+      .stealth-card-icon svg { width: 16px; height: 16px; }
+      .stealth-card-title { font-size: 13px; }
+      .stealth-card-desc { font-size: 12px; line-height: 1.5; }
 
       /* MODES */
       .mode-body { padding: 18px 18px 22px; }
@@ -830,26 +849,50 @@
     <section class="section" id="stealth">
       <div class="container">
         <div class="stealth-band">
-          <div class="stealth-head">
-            <div class="stealth-label">Platform-Safe Delivery</div>
-            <h2 class="stealth-title">AI-generated. Posts like a phone photo.</h2>
-            <p class="stealth-sub">Every AI tool embeds invisible fingerprints — watermark data, encoder signatures, metadata flags — that Instagram, TikTok, and Meta use to quietly kill reach on AI content. We clean all of it, automatically, on every export.</p>
-          </div>
-          <div class="stealth-grid">
-            <div class="stealth-card">
-              <div class="stealth-card-num">01</div>
-              <div class="stealth-card-title">Fingerprint strip</div>
-              <div class="stealth-card-desc">Every frame re-rendered through native-grade encoding. Embedded AI watermark patterns destroyed. Output reads like camera footage.</div>
+          <div class="stealth-layout">
+            <div class="stealth-head">
+              <div class="stealth-label">Platform-Safe Delivery</div>
+              <h2 class="stealth-title">AI-generated. Posts like a phone photo.</h2>
+              <p class="stealth-sub">Every AI tool embeds invisible fingerprints — watermark data, encoder signatures, metadata flags — that Instagram, TikTok, and Meta use to quietly kill reach on AI content. We clean all of it, automatically, on every export.</p>
+              <div class="stealth-proof">
+                <div class="stealth-proof-item">
+                  <div class="stealth-proof-num"><span class="pct">100%</span></div>
+                  <div class="stealth-proof-label">AI fingerprints removed on every export</div>
+                </div>
+                <div class="stealth-proof-item">
+                  <div class="stealth-proof-num">0<span class="pct">ms</span></div>
+                  <div class="stealth-proof-label">Added to your workflow — runs automatically</div>
+                </div>
+              </div>
             </div>
-            <div class="stealth-card">
-              <div class="stealth-card-num">02</div>
-              <div class="stealth-card-title">Metadata scrub</div>
-              <div class="stealth-card-desc">Encoder signatures, generator tags, software identifiers — all stripped. No trace of AI origin remains in the file.</div>
-            </div>
-            <div class="stealth-card">
-              <div class="stealth-card-num">03</div>
-              <div class="stealth-card-title">Native device profile</div>
-              <div class="stealth-card-desc">Authentic device metadata injected — phone model, OS, timestamps — so platforms classify your content as natively captured.</div>
+            <div class="stealth-grid">
+              <div class="stealth-card">
+                <div class="stealth-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+                </div>
+                <div class="stealth-card-body">
+                  <div class="stealth-card-title"><span class="stealth-card-num">01</span> Fingerprint strip</div>
+                  <div class="stealth-card-desc">Every frame re-rendered through native-grade encoding. AI watermark patterns destroyed.</div>
+                </div>
+              </div>
+              <div class="stealth-card">
+                <div class="stealth-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M14 4l6 6"/><path d="M3 21l3.5-1 11-11-2.5-2.5-11 11L3 21z"/><path d="M14 7l3 3"/></svg>
+                </div>
+                <div class="stealth-card-body">
+                  <div class="stealth-card-title"><span class="stealth-card-num">02</span> Metadata scrub</div>
+                  <div class="stealth-card-desc">Encoder signatures, generator tags, software identifiers — all stripped from the file.</div>
+                </div>
+              </div>
+              <div class="stealth-card">
+                <div class="stealth-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
+                </div>
+                <div class="stealth-card-body">
+                  <div class="stealth-card-title"><span class="stealth-card-num">03</span> Native device profile</div>
+                  <div class="stealth-card-desc">Authentic phone model, OS, and timestamps injected so platforms read it as native capture.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
