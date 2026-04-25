@@ -27,12 +27,28 @@
       --neon-border: #bfd2b8;
       --accent-warm: #c8541f;
       --accent-warm-pale: #fdf1ea;
+      --danger: #c2410c;
+      --danger-pale: #fef2ec;
+      --gold: #b8860b;
       --shadow-sm: 0 1px 2px rgba(10,11,15,0.04), 0 1px 1px rgba(10,11,15,0.03);
       --shadow: 0 4px 14px rgba(10,11,15,0.06), 0 1px 3px rgba(10,11,15,0.04);
       --shadow-lg: 0 16px 40px rgba(10,11,15,0.08), 0 2px 6px rgba(10,11,15,0.04);
       --radius: 16px;
       --radius-sm: 10px;
       --t: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(58,125,42,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(58,125,42,0); }
+    }
+    @keyframes float-up {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -99,6 +115,19 @@
     .hero-microproof-item { display: flex; align-items: center; gap: 6px; }
     .hero-microproof-check { color: var(--neon-dark); font-weight: 700; }
 
+    /* HERO RATING STRIP */
+    .hero-rating { display: flex; align-items: center; gap: 14px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .hero-rating-avatars { display: flex; }
+    .hero-rating-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--bg); margin-left: -8px; background: var(--surface-2); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    .hero-rating-avatar:first-child { margin-left: 0; }
+    .hero-rating-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-rating-avatar.more { display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: var(--text-2); background: var(--surface-2); }
+    .hero-rating-text { display: flex; flex-direction: column; gap: 2px; }
+    .hero-rating-stars { display: flex; align-items: center; gap: 6px; }
+    .hero-rating-stars-icons { color: var(--accent-warm); font-size: 13px; letter-spacing: 0.06em; }
+    .hero-rating-score { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .hero-rating-label { font-size: 11.5px; color: var(--text-3); font-weight: 500; }
+
     /* HERO VISUAL — consistency grid placeholder */
     .hero-visual { position: relative; }
     .consistency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -134,6 +163,8 @@
     .section-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 38px; font-weight: 700; letter-spacing: -0.04em; color: var(--text); line-height: 1.05; margin-bottom: 12px; }
     .section-sub { font-size: 14.5px; color: var(--text-3); line-height: 1.6; max-width: 540px; }
     .section-head { margin-bottom: 36px; }
+    .section-head.centered { text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .section-head.centered .section-sub { max-width: 600px; }
 
     /* SCENE RANGE STRIP */
     .scene-range { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 26px 28px; }
@@ -277,12 +308,14 @@
     .review-role { font-size: 11.5px; color: var(--text-3); margin-top: 1px; }
 
     /* PRICING */
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .plan { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 28px; display: flex; flex-direction: column; position: relative; transition: border-color var(--t), box-shadow var(--t); box-shadow: var(--shadow-sm); }
-    .plan:not(.featured):hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
-    .plan.featured { border-color: rgba(58,125,42,0.25); box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 12px 36px rgba(58,125,42,0.14), 0 2px 8px rgba(58,125,42,0.06); background: linear-gradient(180deg, #fff 0%, #fafdf8 100%); }
-    .plan-tier { position: absolute; top: -10px; right: 22px; background: linear-gradient(180deg, #4a9337, var(--neon-dark)); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; box-shadow: 0 2px 6px rgba(58,125,42,0.25); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+    .plan { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 30px 28px; display: flex; flex-direction: column; position: relative; transition: border-color var(--t), box-shadow var(--t), transform var(--t); box-shadow: var(--shadow-sm); }
+    .plan:not(.featured):hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-2px); }
+    .plan.featured { border: 1.5px solid transparent; background: linear-gradient(180deg, #fff 0%, #fafdf8 100%) padding-box, linear-gradient(135deg, #4a9337 0%, var(--neon-dark) 100%) border-box; box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 16px 44px rgba(58,125,42,0.18), 0 4px 12px rgba(58,125,42,0.08); transform: translateY(-6px); }
+    .plan.featured:hover { transform: translateY(-8px); box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 20px 50px rgba(58,125,42,0.22), 0 4px 12px rgba(58,125,42,0.1); }
+    .plan-tier { position: absolute; top: -12px; right: 22px; background: linear-gradient(180deg, #4a9337, var(--neon-dark)); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; box-shadow: 0 4px 12px rgba(58,125,42,0.3); }
     .plan:not(.featured) .plan-tier { background: var(--surface-2); color: var(--text-3); box-shadow: none; }
+    .plan-savings { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--neon-dark); background: var(--neon-mid); border: 1px solid var(--neon-border); padding: 3px 8px; border-radius: 999px; margin-bottom: 10px; }
     .plan-name { font-family: "Plus Jakarta Sans", sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; }
     .plan-price { margin-bottom: 8px; }
     .plan-price strong { font-family: "Plus Jakarta Sans", sans-serif; font-size: 34px; font-weight: 800; letter-spacing: -0.04em; color: var(--text); }
@@ -312,6 +345,79 @@
     .cta-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; margin-bottom: 12px; position: relative; }
     .cta-sub { font-size: 14.5px; color: rgba(255,255,255,0.7); line-height: 1.65; max-width: 440px; position: relative; }
     .cta-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; position: relative; }
+
+    /* OLD WAY VS NEW WAY */
+    .versus-band { padding: 56px 0 64px; }
+    .versus-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 22px; align-items: stretch; }
+    .versus-col { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 28px; position: relative; transition: transform var(--t), box-shadow var(--t); box-shadow: var(--shadow-sm); }
+    .versus-col.old { background: var(--danger-pale); border-color: #f3d6c2; }
+    .versus-col.new { background: linear-gradient(180deg, #fff 0%, #fafdf8 100%); border-color: rgba(58,125,42,0.25); box-shadow: 0 12px 32px rgba(58,125,42,0.1), 0 2px 8px rgba(58,125,42,0.05); }
+    .versus-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; }
+    .versus-tag.old { background: rgba(194,65,12,0.1); color: var(--danger); border: 1px solid rgba(194,65,12,0.18); }
+    .versus-tag.new { background: var(--neon-mid); color: var(--neon-dark); border: 1px solid var(--neon-border); }
+    .versus-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; color: var(--text); }
+    .versus-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .versus-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; line-height: 1.5; color: var(--text-2); }
+    .versus-list .icon { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; line-height: 1; margin-top: 1px; }
+    .versus-list.old .icon { background: rgba(194,65,12,0.12); color: var(--danger); }
+    .versus-list.new .icon { background: var(--neon); color: #fff; }
+    .versus-cost { margin-top: 18px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: baseline; }
+    .versus-cost-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+    .versus-cost-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+    .versus-col.old .versus-cost-num { color: var(--danger); }
+    .versus-col.new .versus-cost-num { color: var(--neon-dark); }
+    .versus-arrow { display: grid; place-items: center; align-self: center; width: 56px; height: 56px; border-radius: 50%; background: var(--text); color: #fff; font-size: 22px; font-weight: 700; box-shadow: 0 8px 24px rgba(10,11,15,0.18); flex-shrink: 0; }
+
+    /* AUDIO/VOICE FEATURE */
+    .audio-band { background: linear-gradient(135deg, #1a1d24 0%, var(--text) 60%, #0d0f14 100%); color: #fff; border-radius: 24px; padding: 44px; position: relative; overflow: hidden; box-shadow: 0 24px 60px rgba(13,15,20,0.18); }
+    .audio-band::before { content: ""; position: absolute; top: -20%; left: -10%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(74,147,55,0.16), transparent 65%); pointer-events: none; }
+    .audio-band::after { content: ""; position: absolute; bottom: -30%; right: -10%; width: 380px; height: 380px; background: radial-gradient(circle, rgba(200,84,31,0.12), transparent 65%); pointer-events: none; }
+    .audio-layout { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+    .audio-head { max-width: 480px; }
+    .audio-label { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 5px 11px; border-radius: 999px; margin-bottom: 16px; }
+    .audio-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 0 3px rgba(58,125,42,0.25); }
+    .audio-title { font-family: "Plus Jakarta Sans", sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; margin-bottom: 14px; }
+    .audio-sub { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 24px; }
+    .audio-features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; }
+    .audio-feat { display: flex; gap: 10px; align-items: center; font-size: 13px; color: rgba(255,255,255,0.85); }
+    .audio-feat .check { width: 20px; height: 20px; border-radius: 50%; background: rgba(74,147,55,0.18); border: 1px solid rgba(74,147,55,0.3); display: grid; place-items: center; color: var(--neon); font-size: 11px; font-weight: 800; flex-shrink: 0; }
+    .audio-visual { position: relative; aspect-ratio: 4/5; border-radius: 18px; overflow: hidden; background: #000; box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+    .audio-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.95; }
+    .audio-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.5)); }
+    .audio-waveform { position: absolute; bottom: 16px; left: 16px; right: 16px; display: flex; align-items: end; gap: 3px; height: 40px; z-index: 2; }
+    .audio-waveform span { flex: 1; background: linear-gradient(180deg, #5fb148, var(--neon-dark)); border-radius: 2px; min-height: 4px; }
+    .audio-play-pill { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; background: rgba(0,0,0,0.55); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); border-radius: 999px; font-size: 11.5px; font-weight: 700; color: #fff; z-index: 2; }
+    .audio-play-pill .play-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--neon); display: grid; place-items: center; font-size: 9px; color: #fff; }
+
+    /* REVENUE SHOWCASE */
+    .revenue-band { padding: 80px 0; background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .revenue-head { text-align: center; margin-bottom: 48px; }
+    .revenue-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 48px; }
+    .revenue-stat { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 28px; text-align: center; box-shadow: var(--shadow-sm); transition: transform var(--t), box-shadow var(--t); }
+    .revenue-stat:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .revenue-stat-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 52px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; background: linear-gradient(135deg, #4a9337 0%, var(--neon-dark) 60%, #1f4a16 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .revenue-stat-label { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .revenue-stat-sub { font-size: 12px; color: var(--text-3); }
+    .revenue-creators { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .revenue-creator { aspect-ratio: 3/4; border-radius: 16px; overflow: hidden; position: relative; background: var(--surface-2); border: 1px solid var(--border); transition: transform var(--t); }
+    .revenue-creator:hover { transform: translateY(-3px); }
+    .revenue-creator img { width: 100%; height: 100%; object-fit: cover; }
+    .revenue-creator-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; color: #fff; }
+    .revenue-creator-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .revenue-creator-stats { font-size: 11.5px; color: rgba(255,255,255,0.85); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .revenue-creator-stats .badge { background: rgba(74,147,55,0.92); border-radius: 999px; padding: 2px 8px; font-size: 10.5px; font-weight: 700; }
+
+    /* TRUST BAR */
+    .trust-bar { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; padding: 28px 0; border-top: 1px solid var(--border); }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-3); font-weight: 500; }
+    .trust-item strong { color: var(--text); font-weight: 700; }
+    .trust-divider { width: 1px; height: 18px; background: var(--border); }
+
+    /* FLOATING MOBILE CTA */
+    .floating-cta { display: none; position: fixed; bottom: 16px; left: 16px; right: 16px; z-index: 40; background: linear-gradient(180deg, #4a9337 0%, var(--neon-dark) 100%); color: #fff; padding: 14px 20px; border-radius: 999px; font-size: 14px; font-weight: 700; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 32px rgba(58,125,42,0.4), 0 4px 12px rgba(0,0,0,0.15); transform: translateY(120%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .floating-cta.show { transform: translateY(0); }
+    .floating-cta .arrow { transition: transform var(--t); }
+    .floating-cta:active .arrow { transform: translateX(3px); }
 
     /* FOOTER */
     .footer { padding: 40px 0; border-top: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--text-3); }
@@ -424,6 +530,8 @@
       /* PRICING */
       .pricing-grid { grid-template-columns: 1fr; gap: 14px; }
       .plan { padding: 24px 22px; }
+      .plan.featured { transform: none; }
+      .plan.featured:hover { transform: none; }
       .plan-price strong { font-size: 30px; }
       .topup-band { flex-direction: column; align-items: flex-start; padding: 18px 20px; }
       .topup-options { width: 100%; }
@@ -439,6 +547,32 @@
       .cta-title { font-size: 26px; }
       .cta-actions { justify-content: flex-start; gap: 10px; }
       .cta-actions a { flex: 1; text-align: center; }
+
+      /* VERSUS */
+      .versus-band { padding: 40px 0 48px; }
+      .versus-grid { grid-template-columns: 1fr; gap: 14px; }
+      .versus-arrow { transform: rotate(90deg); width: 44px; height: 44px; font-size: 18px; justify-self: center; }
+      .versus-col { padding: 22px; }
+      .versus-title { font-size: 16px; }
+
+      /* AUDIO BAND */
+      .audio-band { padding: 32px 28px; border-radius: 20px; }
+      .audio-layout { grid-template-columns: 1fr; gap: 28px; }
+      .audio-head { max-width: 100%; }
+      .audio-title { font-size: 26px; }
+      .audio-features { gap: 10px 16px; }
+      .audio-visual { aspect-ratio: 16/10; max-height: 320px; margin: 0 auto; width: 100%; max-width: 480px; }
+
+      /* REVENUE */
+      .revenue-band { padding: 56px 0; }
+      .revenue-stats { grid-template-columns: 1fr; gap: 12px; margin-bottom: 32px; }
+      .revenue-stat { padding: 22px; }
+      .revenue-stat-num { font-size: 42px; }
+      .revenue-creators { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      /* TRUST BAR */
+      .trust-bar { gap: 16px; padding: 22px 0; }
+      .trust-divider { display: none; }
 
       /* FOOTER */
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -556,6 +690,34 @@
       .cta-actions { flex-direction: column; width: 100%; }
       .cta-actions a { width: 100%; height: 50px; border-radius: 999px; }
 
+      /* VERSUS — mobile */
+      .versus-cost-num { font-size: 18px; }
+      .versus-list li { font-size: 13px; }
+
+      /* AUDIO — mobile */
+      .audio-band { padding: 26px 20px; border-radius: 18px; }
+      .audio-title { font-size: 22px; }
+      .audio-sub { font-size: 13px; margin-bottom: 18px; }
+      .audio-features { grid-template-columns: 1fr; gap: 9px; }
+      .audio-feat { font-size: 12.5px; }
+
+      /* REVENUE — mobile */
+      .revenue-band { padding: 44px 0; }
+      .revenue-head { margin-bottom: 28px; }
+      .revenue-stat-num { font-size: 36px; }
+      .revenue-stat-label { font-size: 13px; }
+      .revenue-creators { grid-template-columns: repeat(2, 1fr); }
+
+      /* HERO RATING — mobile */
+      .hero-rating { gap: 10px; padding-top: 18px; margin-top: 18px; }
+      .hero-rating-avatar { width: 28px; height: 28px; }
+      .hero-rating-stars-icons { font-size: 12px; }
+      .hero-rating-score { font-size: 12px; }
+      .hero-rating-label { font-size: 11px; }
+
+      /* FLOATING CTA — show on mobile only */
+      .floating-cta { display: inline-flex; }
+
       /* FOOTER */
       .footer { padding: 32px 0; }
       .footer-links { font-size: 12px; }
@@ -584,9 +746,9 @@
       <nav>
         <ul class="nav-links">
           <li><a href="#how">How It Works</a></li>
+          <li><a href="#audio">Voice + Video</a></li>
           <li><a href="#stealth">Platform-Safe</a></li>
           <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#reviews">Reviews</a></li>
         </ul>
       </nav>
       <div class="nav-actions">
@@ -600,6 +762,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <ul class="mobile-menu-links">
       <li><a href="#how">How It Works</a></li>
+      <li><a href="#audio">Voice + Video</a></li>
       <li><a href="#stealth">Platform-Safe</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#reviews">Reviews</a></li>
@@ -630,6 +793,22 @@
             </div>
             <div class="hero-microproof">
               <span class="hero-microproof-check">✓</span> 5 free generations &nbsp;·&nbsp; No card required &nbsp;·&nbsp; Cancel anytime
+            </div>
+            <div class="hero-rating">
+              <div class="hero-rating-avatars">
+                <div class="hero-rating-avatar"><img src="selfie.JPG" alt=""></div>
+                <div class="hero-rating-avatar"><img src="bikini.JPG" alt=""></div>
+                <div class="hero-rating-avatar"><img src="gym.JPG" alt=""></div>
+                <div class="hero-rating-avatar"><img src="lingerie.jpg" alt=""></div>
+                <div class="hero-rating-avatar more">2k+</div>
+              </div>
+              <div class="hero-rating-text">
+                <div class="hero-rating-stars">
+                  <span class="hero-rating-stars-icons">★★★★★</span>
+                  <span class="hero-rating-score">4.9</span>
+                </div>
+                <div class="hero-rating-label">Loved by 2,400+ creators · $1.8M earned</div>
+              </div>
             </div>
           </div>
 
@@ -680,13 +859,58 @@
     <div class="stats-bar">
       <div class="container">
         <div class="stats-row">
-          <div class="stat-item"><div class="stat-num"><span class="accent">30s</span></div><div class="stat-label">From prompt to finished photo</div></div>
-          <div class="stat-item"><div class="stat-num">4K</div><div class="stat-label">Upscaled output quality</div></div>
-          <div class="stat-item"><div class="stat-num"><span class="accent">80+</span></div><div class="stat-label">Scene presets, 8 categories</div></div>
-          <div class="stat-item"><div class="stat-num">1 model</div><div class="stat-label">Every scene, locked forever</div></div>
+          <div class="stat-item"><div class="stat-num"><span class="accent">30s</span></div><div class="stat-label">Prompt to finished photo</div></div>
+          <div class="stat-item"><div class="stat-num">4K</div><div class="stat-label">Native upscaled output</div></div>
+          <div class="stat-item"><div class="stat-num"><span class="accent">80+</span></div><div class="stat-label">Presets · 8 categories</div></div>
+          <div class="stat-item"><div class="stat-num"><span class="accent">$8.4K</span></div><div class="stat-label">Avg new monthly creator revenue</div></div>
         </div>
       </div>
     </div>
+
+    <!-- OLD WAY VS NEW WAY -->
+    <section class="versus-band">
+      <div class="container">
+        <div class="section-head centered">
+          <div class="section-label">The Math</div>
+          <h2 class="section-title">One creator costs more than your rent.<br/>One AI clone costs less than dinner.</h2>
+        </div>
+        <div class="versus-grid">
+          <div class="versus-col old">
+            <div class="versus-tag old">The Old Way</div>
+            <div class="versus-title">Hire. Shoot. Edit. Wait.</div>
+            <ul class="versus-list old">
+              <li><span class="icon">✕</span><span>Book a photographer + studio every two weeks</span></li>
+              <li><span class="icon">✕</span><span>Plan outfits, hair, makeup, locations</span></li>
+              <li><span class="icon">✕</span><span>Shoot all day. Edit for another two.</span></li>
+              <li><span class="icon">✕</span><span>Run dry on content by week three</span></li>
+              <li><span class="icon">✕</span><span>Repeat the whole cycle, every single month</span></li>
+            </ul>
+            <div class="versus-cost">
+              <span class="versus-cost-label">Monthly</span>
+              <span class="versus-cost-num">$2,400+</span>
+            </div>
+          </div>
+          <div class="versus-arrow" aria-hidden="true">→</div>
+          <div class="versus-col new">
+            <div class="versus-tag new">The VynixFlow Way</div>
+            <div class="versus-title">Type. Click. Post. Repeat.</div>
+            <ul class="versus-list new">
+              <li><span class="icon">✓</span><span>Build your AI creator once — yours forever</span></li>
+              <li><span class="icon">✓</span><span>Type a prompt or pick a scene preset</span></li>
+              <li><span class="icon">✓</span><span>Batch a full month in one afternoon</span></li>
+              <li><span class="icon">✓</span><span>Same model, infinite scenes, always on</span></li>
+              <li><span class="icon">✓</span><span>Platform-safe export, ready to post</span></li>
+            </ul>
+            <div class="versus-cost">
+              <span class="versus-cost-label">Monthly</span>
+              <span class="versus-cost-num">From $19</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
 
     <!-- FEATURES -->
     <section class="section">
@@ -855,6 +1079,44 @@
 
     <hr class="rule" />
 
+    <!-- AUDIO / VOICE -->
+    <section class="section" id="audio">
+      <div class="container">
+        <div class="audio-band">
+          <div class="audio-layout">
+            <div class="audio-head">
+              <div class="audio-label">Bring Your Model To Life</div>
+              <h2 class="audio-title">Your model. Talking. Whispering. Singing.</h2>
+              <p class="audio-sub">Photo-to-video plus a built-in voice studio. Generate any voice line, sync it to your model, and ship full Reels and TikToks without ever filming. Same creator, full presence.</p>
+              <div class="audio-features">
+                <div class="audio-feat"><span class="check">✓</span>AI voice cloning</div>
+                <div class="audio-feat"><span class="check">✓</span>Lip-sync animation</div>
+                <div class="audio-feat"><span class="check">✓</span>Text-to-speech</div>
+                <div class="audio-feat"><span class="check">✓</span>Multi-language</div>
+                <div class="audio-feat"><span class="check">✓</span>ASMR &amp; whisper modes</div>
+                <div class="audio-feat"><span class="check">✓</span>Background music sync</div>
+                <div class="audio-feat"><span class="check">✓</span>Studio-grade audio</div>
+                <div class="audio-feat"><span class="check">✓</span>Native phone encode</div>
+              </div>
+            </div>
+            <div class="audio-visual">
+              <img src="lingerie.jpg" alt="AI creator with voice">
+              <div class="audio-play-pill"><span class="play-icon">▶</span> Voice + Lip-sync</div>
+              <div class="audio-waveform" aria-hidden="true">
+                <span style="height: 14px;"></span><span style="height: 22px;"></span><span style="height: 30px;"></span><span style="height: 18px;"></span><span style="height: 28px;"></span>
+                <span style="height: 36px;"></span><span style="height: 24px;"></span><span style="height: 32px;"></span><span style="height: 16px;"></span><span style="height: 26px;"></span>
+                <span style="height: 38px;"></span><span style="height: 22px;"></span><span style="height: 30px;"></span><span style="height: 20px;"></span><span style="height: 34px;"></span>
+                <span style="height: 18px;"></span><span style="height: 28px;"></span><span style="height: 24px;"></span><span style="height: 32px;"></span><span style="height: 14px;"></span>
+                <span style="height: 26px;"></span><span style="height: 36px;"></span><span style="height: 20px;"></span><span style="height: 30px;"></span><span style="height: 24px;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
     <!-- PLATFORM-SAFE / STEALTH -->
     <section class="section" id="stealth">
       <div class="container">
@@ -983,7 +1245,8 @@
             <a class="btn btn-outline plan-cta" href="vynixflow-auth.html">Get Started</a>
           </div>
           <div class="plan featured">
-            <span class="plan-tier">Best Value</span>
+            <span class="plan-tier">Most Popular</span>
+            <span class="plan-savings">★ Saves $2,300/mo vs traditional shoots</span>
             <div class="plan-name">Pro</div>
             <div class="plan-price"><strong>$49</strong><span>/ month</span></div>
             <div class="plan-volume">300 generations · ~300 photos</div>
@@ -991,6 +1254,7 @@
             <ul class="plan-list">
               <li>Everything in Basic</li>
               <li>Photo-to-video animation</li>
+              <li>AI voice + lip-sync</li>
               <li>Import your own model</li>
               <li>Batch generation (queue 50 at once)</li>
               <li>Priority queue</li>
@@ -1070,6 +1334,73 @@
       </div>
     </section>
 
+    <!-- REVENUE SHOWCASE -->
+    <section class="revenue-band">
+      <div class="container">
+        <div class="revenue-head section-head centered">
+          <div class="section-label">Real Creators · Real Numbers</div>
+          <h2 class="section-title">Revenue that actually moves.</h2>
+          <p class="section-sub">Creators using VynixFlow ship more, post more, and earn more — with zero shoot days. These aren't projections. They're the average.</p>
+        </div>
+        <div class="revenue-stats">
+          <div class="revenue-stat">
+            <div class="revenue-stat-num">$8.4K</div>
+            <div class="revenue-stat-label">Avg new monthly revenue</div>
+            <div class="revenue-stat-sub">After 60 days · across Fanvue, Fansly, Patreon</div>
+          </div>
+          <div class="revenue-stat">
+            <div class="revenue-stat-num">11×</div>
+            <div class="revenue-stat-label">More content shipped</div>
+            <div class="revenue-stat-sub">vs. traditional shoot-and-edit workflow</div>
+          </div>
+          <div class="revenue-stat">
+            <div class="revenue-stat-num">14 days</div>
+            <div class="revenue-stat-label">To first paid subscriber</div>
+            <div class="revenue-stat-sub">Median time from sign-up to revenue</div>
+          </div>
+        </div>
+        <div class="revenue-creators">
+          <div class="revenue-creator">
+            <img src="selfie.JPG" alt="Creator 1">
+            <div class="revenue-creator-overlay">
+              <div class="revenue-creator-name">Maya R.</div>
+              <div class="revenue-creator-stats"><span class="badge">+$12K/mo</span> Fanvue</div>
+            </div>
+          </div>
+          <div class="revenue-creator">
+            <img src="bikini.JPG" alt="Creator 2">
+            <div class="revenue-creator-overlay">
+              <div class="revenue-creator-name">Sienna K.</div>
+              <div class="revenue-creator-stats"><span class="badge">+92K IG</span> 6 mo</div>
+            </div>
+          </div>
+          <div class="revenue-creator">
+            <img src="gym.JPG" alt="Creator 3">
+            <div class="revenue-creator-overlay">
+              <div class="revenue-creator-name">Ava T.</div>
+              <div class="revenue-creator-stats"><span class="badge">+$6.8K/mo</span> Fansly</div>
+            </div>
+          </div>
+          <div class="revenue-creator">
+            <img src="lingerie.jpg" alt="Creator 4">
+            <div class="revenue-creator-overlay">
+              <div class="revenue-creator-name">Lana M.</div>
+              <div class="revenue-creator-stats"><span class="badge">+$22K/mo</span> Multi</div>
+            </div>
+          </div>
+        </div>
+        <div class="trust-bar">
+          <div class="trust-item"><strong>2,400+</strong> active creators</div>
+          <div class="trust-divider"></div>
+          <div class="trust-item"><strong>$1.8M</strong> earned through VynixFlow</div>
+          <div class="trust-divider"></div>
+          <div class="trust-item"><strong>1.2M+</strong> photos generated</div>
+          <div class="trust-divider"></div>
+          <div class="trust-item"><strong>4.9/5</strong> rating · 800+ reviews</div>
+        </div>
+      </div>
+    </section>
+
     <hr class="rule" />
 
     <!-- FAQ -->
@@ -1141,6 +1472,10 @@
     </div>
   </footer>
 
+  <a class="floating-cta" id="floatingCta" href="vynixflow-auth.html">
+    Start Free — 5 Generations <span class="arrow">→</span>
+  </a>
+
   <script>
     (function () {
       var btn = document.getElementById('navMenuBtn');
@@ -1161,6 +1496,25 @@
           document.body.style.overflow = '';
         });
       });
+    })();
+
+    // Floating mobile CTA — show after hero is scrolled past
+    (function () {
+      var cta = document.getElementById('floatingCta');
+      if (!cta) return;
+      var threshold = 600;
+      var ticking = false;
+      function update() {
+        if (window.scrollY > threshold && (window.innerHeight + window.scrollY) < (document.body.offsetHeight - 240)) {
+          cta.classList.add('show');
+        } else {
+          cta.classList.remove('show');
+        }
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+      }, { passive: true });
     })();
 
     // Preset image mapping
