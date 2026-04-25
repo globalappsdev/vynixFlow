@@ -108,7 +108,7 @@
     .hero-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 0 3px rgba(58,125,42,0.18); }
     .hero-label-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon-dark); padding-right: 8px; border-right: 1px solid var(--border); margin-right: 2px; }
     .hero-title { font-family: "Bricolage Grotesque", sans-serif; font-size: 52px; line-height: 1.02; letter-spacing: -0.045em; color: var(--text); margin-bottom: 20px; }
-    .hero-title .hero-highlight { background: linear-gradient(135deg, #4a9337 0%, var(--neon-dark) 60%, #1f4a16 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; font-weight: 500; }
+    .hero-title .hero-highlight { background: linear-gradient(135deg, #4a9337 0%, var(--neon-dark) 60%, #1f4a16 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; font-weight: 500; white-space: nowrap; padding-right: 0.08em; }
     .hero-sub { font-size: 15px; line-height: 1.6; color: var(--text-2); max-width: 480px; margin-bottom: 28px; }
     .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; align-items: center; }
     .hero-microproof { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--text-3); flex-wrap: wrap; }
@@ -413,12 +413,6 @@
     .trust-item strong { color: var(--text); font-weight: 700; }
     .trust-divider { width: 1px; height: 18px; background: var(--border); }
 
-    /* FLOATING MOBILE CTA */
-    .floating-cta { display: none; position: fixed; bottom: 16px; left: 16px; right: 16px; z-index: 40; background: linear-gradient(180deg, #4a9337 0%, var(--neon-dark) 100%); color: #fff; padding: 14px 20px; border-radius: 999px; font-size: 14px; font-weight: 700; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 32px rgba(58,125,42,0.4), 0 4px 12px rgba(0,0,0,0.15); transform: translateY(120%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .floating-cta.show { transform: translateY(0); }
-    .floating-cta .arrow { transition: transform var(--t); }
-    .floating-cta:active .arrow { transform: translateX(3px); }
-
     /* FOOTER */
     .footer { padding: 40px 0; border-top: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--text-3); }
     .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
@@ -714,9 +708,6 @@
       .hero-rating-stars-icons { font-size: 12px; }
       .hero-rating-score { font-size: 12px; }
       .hero-rating-label { font-size: 11px; }
-
-      /* FLOATING CTA — show on mobile only */
-      .floating-cta { display: inline-flex; }
 
       /* FOOTER */
       .footer { padding: 32px 0; }
@@ -1472,10 +1463,6 @@
     </div>
   </footer>
 
-  <a class="floating-cta" id="floatingCta" href="vynixflow-auth.html">
-    Start Free — 5 Generations <span class="arrow">→</span>
-  </a>
-
   <script>
     (function () {
       var btn = document.getElementById('navMenuBtn');
@@ -1496,25 +1483,6 @@
           document.body.style.overflow = '';
         });
       });
-    })();
-
-    // Floating mobile CTA — show after hero is scrolled past
-    (function () {
-      var cta = document.getElementById('floatingCta');
-      if (!cta) return;
-      var threshold = 600;
-      var ticking = false;
-      function update() {
-        if (window.scrollY > threshold && (window.innerHeight + window.scrollY) < (document.body.offsetHeight - 240)) {
-          cta.classList.add('show');
-        } else {
-          cta.classList.remove('show');
-        }
-        ticking = false;
-      }
-      window.addEventListener('scroll', function () {
-        if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
-      }, { passive: true });
     })();
 
     // Preset image mapping
