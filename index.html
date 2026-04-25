@@ -309,7 +309,8 @@
       .hero-title br { display: none; }
       .hero-sub { font-size: 15px; max-width: 100%; margin-bottom: 22px; }
       .hero-actions { flex-direction: column; width: 100%; gap: 8px; }
-      .hero-actions .btn { width: 100%; height: 52px; font-size: 15px; }
+      .hero-actions .btn-primary.btn-lg { width: 100%; height: 46px; font-size: 14px; }
+      .hero-actions .btn-outline.btn-lg { background: transparent; border: none; box-shadow: none; color: var(--text-3); font-size: 12.5px; height: 32px; padding: 0; align-self: center; text-decoration: underline; text-underline-offset: 3px; }
       .hero-microproof { flex-direction: column; align-items: flex-start; gap: 8px; }
       .consistency-banner { top: -8px; right: 8px; font-size: 10px; padding: 6px 10px; z-index:9 }
 
@@ -419,13 +420,14 @@
       body { font-size: 14.5px; }
 
       /* HERO */
-      .hero { padding: 32px 0 28px; }
-      .hero-title { font-size: 32px; letter-spacing: -0.035em; }
-      .hero-label { font-size: 10.5px; padding: 5px 10px; margin-bottom: 16px; }
-      .hero-grid { gap: 28px; }
+      .hero { padding: 28px 0 24px; }
+      .hero-title { font-size: 30px; letter-spacing: -0.035em; }
+      .hero-label { display: none; }
+      .hero-sub { font-size: 13.5px; margin-bottom: 20px; }
+      .hero-grid { gap: 24px; }
+      .hero-actions { margin-bottom: 14px; }
       .consistency-grid { gap: 8px; }
       .consistency-tile .tile-label { font-size: 9.5px; padding: 3px 7px; }
-      .hero-actions .btn { height: 50px; }
 
       /* PLATFORM STRIP — make it horizontally scrollable on mobile */
       .platform-strip { padding: 14px 0; overflow: hidden; }
@@ -436,47 +438,47 @@
       .platform-strip-item { white-space: nowrap; font-size: 12.5px; flex-shrink: 0; }
 
       /* SECTION */
-      .section { padding: 52px 0; }
-      .section-title { font-size: 26px; line-height: 1.15; }
-      .section-sub { font-size: 13.5px; }
-      .section-label { font-size: 10.5px; }
+      .section { padding: 44px 0; }
+      .section-head { margin-bottom: 20px; }
+      .section-title { font-size: 24px; line-height: 1.15; }
+      .section-sub { display: none; }
+      .section-label { display: none; }
 
       /* STATS */
       .stat-num { font-size: 22px; }
-      .stat-item { padding: 20px 14px; }
+      .stat-item { padding: 18px 12px; }
 
-      /* SCENE RANGE */
-      .scene-range { padding: 20px 18px; border-radius: 14px; }
-      .scene-tags { gap: 6px; }
-      .scene-tag { font-size: 11.5px; padding: 5px 10px; }
-
-      /* FEATURES — 1 col on small mobile */
-      .features-grid { grid-template-columns: 1fr; }
-      .feat-cell { padding: 20px 18px; }
-      .feat-title { font-size: 14.5px; }
-      .feat-desc { font-size: 13px; }
+      /* FEATURES — 2 col icon+title only */
+      .scene-tags { display: none; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .feat-cell { padding: 18px 14px; }
+      .feat-title { font-size: 13px; }
+      .feat-desc { display: none; }
 
       /* MODEL BUILDER — 2x6 on mobile */
-      .builder-showcase { padding: 24px 18px; border-radius: 14px; }
-      .builder-attrs { grid-template-columns: repeat(2, 1fr); }
-      .builder-attr { padding: 12px 12px; }
-      .builder-attr-count { font-size: 17px; }
-      .builder-attr-label { font-size: 10.5px; }
+      .builder-showcase { padding: 22px 16px; border-radius: 14px; }
+      .builder-showcase-sub { display: none; }
+      .builder-attrs { grid-template-columns: repeat(3, 1fr); }
+      .builder-attr { padding: 12px 10px; }
+      .builder-attr:nth-child(n+10) { display: none; }
+      .builder-attr-count { font-size: 16px; }
+      .builder-attr-label { font-size: 10px; }
+      .import-callout { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
+      .import-callout-title { font-size: 15px; }
+      .import-callout-points { display: none; }
 
       /* HOW */
-      .step-card { padding: 20px 18px; border-radius: 14px; }
-      .step-title { font-size: 15.5px; }
-      .step-desc { font-size: 13px; }
-      .step-visual { aspect-ratio: 16/11; }
-
-      /* IMPORT */
-      .import-band { padding: 28px 22px; border-radius: 14px; }
-      .import-title { font-size: 20px; }
-      .import-desc { font-size: 13.5px; }
+      .step-card { padding: 18px 16px; border-radius: 14px; }
+      .step-title { font-size: 15px; }
+      .step-desc { display: none; }
+      .step-visual { aspect-ratio: 16/10; }
 
       /* STEALTH */
-      .stealth-band { padding: 28px 22px; border-radius: 14px; }
-      .stealth-title { font-size: 22px; }
+      .stealth-band { padding: 24px 18px; border-radius: 14px; }
+      .stealth-title { font-size: 20px; }
+      .stealth-sub { display: none; }
+      .stealth-card-desc { display: none; }
+      .stealth-card { padding: 14px 14px; }
       .stealth-sub { font-size: 13.5px; }
       .stealth-card { padding: 18px 16px; }
 
@@ -484,30 +486,21 @@
       .mode-body { padding: 18px 18px 22px; }
       .mode-title { font-size: 16px; }
 
-      /* WHY */
-      .why-card { padding: 22px 18px; border-radius: 14px; }
-      .why-title { font-size: 15.5px; }
-      .why-metric { font-size: 22px; }
-      .why-desc { font-size: 13px; }
-
-      /* COMPARISON — further tighten */
-      .compare-row > div { padding: 11px 14px; font-size: 12.5px; }
-      .compare-row > div.label { padding: 11px 14px; font-size: 13px; }
-      .compare-row > div:not(.label)::before { font-size: 10.5px; }
-
-      /* REVIEWS */
-      .review-text { font-size: 13.5px; }
+      /* REVIEWS — show only first card */
+      .review-card:not(:first-child) { display: none; }
+      .review-text { font-size: 13px; }
       .review-avatar { width: 32px; height: 32px; font-size: 11px; }
       .review-author { font-size: 12.5px; }
       .review-role { font-size: 11px; }
 
       /* PRICING */
-      .plan { padding: 22px 20px; border-radius: 14px; }
-      .plan-name { font-size: 18px; }
+      .plan { padding: 20px 18px; border-radius: 14px; }
+      .plan-name { font-size: 17px; }
       .plan-price strong { font-size: 28px; }
+      .plan-copy { display: none; }
       .plan-list li { font-size: 12.5px; }
-      .topup-options { flex-direction: column; gap: 8px; }
-      .topup-option { width: 100%; }
+      .topup-band { display: none; }
+      .compare-wrap { display: none; }
 
       /* FAQ */
       .faq-q { font-size: 13.5px; }
@@ -515,8 +508,8 @@
 
       /* CTA */
       .cta-band { padding: 28px 22px; border-radius: 14px; }
-      .cta-title { font-size: 22px; }
-      .cta-sub { font-size: 13.5px; }
+      .cta-title { font-size: 20px; }
+      .cta-sub { font-size: 13px; }
       .cta-actions { flex-direction: column; width: 100%; }
       .cta-actions a { width: 100%; height: 48px; }
 
